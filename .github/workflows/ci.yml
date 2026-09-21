@@ -1,34 +1,88 @@
 name: ci
 
-on: push
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  merge_group:
+    branches:
+      - main
+
+# cancel in-progress runs on new commits to the same PR (github.event.number)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [22]
+  lint:
+    name: 🔠 Lint project
+    runs-on: ubuntu-24.04-arm
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Install node
-        uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          node-version: ${{ matrix.node }}
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
           cache: pnpm
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: Lint
+      - name: 🔠 Lint project
         run: pnpm run lint
 
-      - name: Typecheck
+  typecheck:
+    name: 🔎 Typecheck project
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🔎 Typecheck project
         run: pnpm run typecheck
+
+  build:
+    name: 🏗️ Build project
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      # Same output `pnpm run deploy` uploads to Cloudflare.
+      - name: 🏗️ Generate static site
+        run: pnpm run generate
