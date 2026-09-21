@@ -36,12 +36,12 @@
 
 <script setup lang="ts">
 const { to } = defineProps<{
-  to: string
-  title: string
-  description?: string
-  icon?: string
-}>()
+  to: string;
+  title: string;
+  description?: string;
+  icon?: string;
+}>();
 
-const isHttp = computed(() => /^https?:/.test(to))
-const external = computed(() => isHttp.value || to.startsWith('mailto:'))
+const isHttp = computed(() => /^https?:/.test(to));
+const external = computed(() => isHttp.value || to.startsWith("mailto:"));
 </script>

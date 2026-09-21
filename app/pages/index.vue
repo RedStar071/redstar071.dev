@@ -147,30 +147,30 @@
 </template>
 
 <script setup lang="ts">
-const { data: page } = await useAsyncData('index', () => queryCollection('index').first())
+const { data: page } = await useAsyncData("index", () => queryCollection("index").first());
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
 }
 
 const [{ data: projects }, { data: posts }] = await Promise.all([
-  useAsyncData('index-projects', () => queryCollection('projects').order('order', 'ASC').all()),
-  useAsyncData('index-posts', () => queryCollection('blog').order('date', 'DESC').limit(3).all())
-])
+  useAsyncData("index-projects", () => queryCollection("projects").order("order", "ASC").all()),
+  useAsyncData("index-posts", () => queryCollection("blog").order("date", "DESC").limit(3).all())
+]);
 
-const featured = computed(() => projects.value?.filter(project => project.featured).slice(0, 4) ?? [])
+const featured = computed(() => projects.value?.filter(project => project.featured).slice(0, 4) ?? []);
 
-const { global, socials } = useAppConfig()
+const { global, socials } = useAppConfig();
 
 useSeoMeta({
   title: page.value.seo.title || page.value.title,
-  titleTemplate: '%s',
+  titleTemplate: "%s",
   ogTitle: page.value.seo.title || page.value.title,
   description: page.value.seo.description || page.value.description,
   ogDescription: page.value.seo.description || page.value.description
-})
+});
 
-defineOgImageComponent('Profile', {
+defineOgImageComponent("Profile", {
   title: page.value.title,
   description: page.value.description
-})
+});
 </script>

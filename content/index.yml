@@ -1,26 +1,26 @@
 seo:
-  title: "RedStar · Discord bots and open-source tooling"
+  title: RedStar · Discord bots and open-source tooling
   description: "I'm RedStar, a developer from Italy. I maintain WolfStar, a Discord moderation bot, and build open-source TypeScript tooling for Discord apps and the web."
-title: "RedStar"
+title: RedStar
 description: "I build Discord bots and open-source tooling for the web, from Italy."
 hero:
   greeting: "hi there! i'm"
   bio: "i build Discord bots and open-source tooling for the web. these days i'm maintaining [WolfStar](https://wolfstar.rocks) and [Stars Components](https://stars-components.js.org)."
 about:
-  title: "a bit about me"
+  title: a bit about me
   items:
     - "i look after WolfStar, a Discord moderation bot, and its dashboard"
     - "i write TypeScript, Vue and Nuxt, mostly in the open"
     - "i make frameworks, plugins and UI kits for other devs"
     - "i'm based in Italy"
 socials:
-  title: "where to find me"
+  title: where to find me
 projects:
   title: "what i've made"
 presence:
-  title: "on discord right now"
+  title: on discord right now
 stack:
-  title: "what i use"
+  title: what i use
   items:
     - label: TypeScript
       icon: i-simple-icons-typescript
@@ -43,4 +43,4 @@ stack:
     - label: Cloudflare
       icon: i-simple-icons-cloudflare
 writing:
-  title: "latest writing"
+  title: latest writing

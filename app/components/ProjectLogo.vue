@@ -18,10 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ProjectsCollectionItem } from '@nuxt/content'
+import type { ProjectsCollectionItem } from "@nuxt/content";
 
-const { size = 'md' } = defineProps<{
-  project: Pick<ProjectsCollectionItem, 'logo' | 'icon'>
-  size?: 'md' | 'lg'
-}>()
+const { size = "md" } = defineProps<{
+  project: Pick<ProjectsCollectionItem, "logo" | "icon">;
+  size?: "md" | "lg";
+}>();
 </script>

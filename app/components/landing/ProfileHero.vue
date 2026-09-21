@@ -119,38 +119,38 @@
 </template>
 
 <script setup lang="ts">
-import type { IndexCollectionItem } from '@nuxt/content'
+import type { IndexCollectionItem } from "@nuxt/content";
 
 defineProps<{
-  page: IndexCollectionItem
-}>()
+  page: IndexCollectionItem;
+}>();
 
-const { global, socials } = useAppConfig()
-const github = socials.find(social => social.label === 'GitHub')
+const { global, socials } = useAppConfig();
+const github = socials.find(social => social.label === "GitHub");
 
-const { data: presence } = useDiscordPresence()
+const { data: presence } = useDiscordPresence();
 
 // One wavy band per 720x120 tile; skewing the pattern by atan(1/3) turns it into bignut-style diagonal stripes.
 // Shifting by one wavelength (720px) lands on an identical tile, which is what lets the drift loop seamlessly.
 const WAVE_PATH = (() => {
-  const top: string[] = []
-  const bottom: string[] = []
+  const top: string[] = [];
+  const bottom: string[] = [];
   for (let x = 0; x <= 720; x += 30) {
-    const y = 30 + 22 * Math.sin((2 * Math.PI * x) / 720)
-    top.push(`${x} ${y.toFixed(1)}`)
-    bottom.unshift(`${x} ${(y + 60).toFixed(1)}`)
+    const y = 30 + 22 * Math.sin((2 * Math.PI * x) / 720);
+    top.push(`${x} ${y.toFixed(1)}`);
+    bottom.unshift(`${x} ${(y + 60).toFixed(1)}`);
   }
-  return `M${top.join('L')}L${bottom.join('L')}Z`
-})()
+  return `M${top.join("L")}L${bottom.join("L")}Z`;
+})();
 
 const stars = [
-  'top-[14%] left-[5%] size-8 -rotate-12',
-  'top-[56%] left-[14%] size-5 rotate-6 [--delay:1.1s] max-sm:hidden',
-  'top-[22%] left-[25%] size-11 rotate-12 [--delay:2.3s]',
-  'top-[8%] left-[40%] size-5 -rotate-6 [--delay:0.6s] max-sm:hidden',
-  'top-[10%] left-[60%] size-7 rotate-[20deg] [--delay:3.1s]',
-  'top-[44%] left-[74%] size-10 -rotate-[8deg] [--delay:1.7s]',
-  'top-[16%] left-[86%] size-5 rotate-3 [--delay:0.3s] max-sm:hidden',
-  'top-[58%] left-[92%] size-7 rotate-[14deg] [--delay:2.7s]'
-]
+  "top-[14%] left-[5%] size-8 -rotate-12",
+  "top-[56%] left-[14%] size-5 rotate-6 [--delay:1.1s] max-sm:hidden",
+  "top-[22%] left-[25%] size-11 rotate-12 [--delay:2.3s]",
+  "top-[8%] left-[40%] size-5 -rotate-6 [--delay:0.6s] max-sm:hidden",
+  "top-[10%] left-[60%] size-7 rotate-[20deg] [--delay:3.1s]",
+  "top-[44%] left-[74%] size-10 -rotate-[8deg] [--delay:1.7s]",
+  "top-[16%] left-[86%] size-5 rotate-3 [--delay:0.3s] max-sm:hidden",
+  "top-[58%] left-[92%] size-7 rotate-[14deg] [--delay:2.7s]"
+];
 </script>

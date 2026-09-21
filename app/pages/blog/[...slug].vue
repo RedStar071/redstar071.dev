@@ -61,33 +61,33 @@
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
-const site = useSiteConfig()
+const route = useRoute();
+const site = useSiteConfig();
 
-const { data: page } = await useAsyncData(route.path, () => queryCollection('blog').path(route.path).first())
+const { data: page } = await useAsyncData(route.path, () => queryCollection("blog").path(route.path).first());
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
 }
 
-const { data: surround } = await useAsyncData(`${route.path}-surround`, () => queryCollectionItemSurroundings('blog', route.path, {
-  fields: ['description']
-}))
+const { data: surround } = await useAsyncData(`${route.path}-surround`, () => queryCollectionItemSurroundings("blog", route.path, {
+  fields: ["description"]
+}));
 
-const title = page.value.seo?.title || page.value.title
-const description = page.value.seo?.description || page.value.description
+const title = page.value.seo?.title || page.value.title;
+const description = page.value.seo?.description || page.value.description;
 
 useSeoMeta({
   title,
   description,
   ogTitle: title,
   ogDescription: description
-})
+});
 
 if (page.value.image) {
-  defineOgImage({ url: page.value.image })
+  defineOgImage({ url: page.value.image });
 } else {
-  defineOgImageComponent('Profile', { title, description })
+  defineOgImageComponent("Profile", { title, description });
 }
 
-const articleLink = computed(() => `${site.url}${route.path}`)
+const articleLink = computed(() => `${site.url}${route.path}`);
 </script>

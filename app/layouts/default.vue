@@ -21,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
-const main = useTemplateRef('main')
+const main = useTemplateRef("main");
 
 function skipToContent() {
-  main.value?.focus()
-  main.value?.scrollIntoView()
+  main.value?.focus();
+  main.value?.scrollIntoView();
 }
 </script>

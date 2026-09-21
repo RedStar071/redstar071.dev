@@ -27,14 +27,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Shape } from '~/utils/shapes'
+import type { Shape } from "~/utils/shapes";
 
-const { shape = 'cookie', tone = 'tonal' } = defineProps<{
-  title: string
-  icon: string
-  shape?: Shape
-  tone?: 'solid' | 'tonal'
-}>()
+const { shape = "cookie", tone = "tonal" } = defineProps<{
+  title: string;
+  icon: string;
+  shape?: Shape;
+  tone?: "solid" | "tonal";
+}>();
 
-const headingId = useId()
+const headingId = useId();
 </script>

@@ -61,11 +61,11 @@
 </template>
 
 <script setup lang="ts">
-const { global, socials } = useAppConfig()
-const github = socials.find(social => social.label === 'GitHub')
+const { global, socials } = useAppConfig();
+const github = socials.find(social => social.label === "GitHub");
 
-const { data: postCount } = await useAsyncData('blog-count', () => queryCollection('blog').count())
+const { data: postCount } = await useAsyncData("blog-count", () => queryCollection("blog").count());
 
 // The writing link only shows up once there is something to read.
-const links = computed(() => navLinks.filter(link => link.to !== '/' && (link.to !== '/blog' || postCount.value)))
+const links = computed(() => navLinks.filter(link => link.to !== "/" && (link.to !== "/blog" || postCount.value)));
 </script>

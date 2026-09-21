@@ -46,6 +46,6 @@
 </template>
 
 <script setup lang="ts">
-const { global, socials } = useAppConfig()
-const year = new Date().getFullYear()
+const { global, socials } = useAppConfig();
+const year = new Date().getFullYear();
 </script>

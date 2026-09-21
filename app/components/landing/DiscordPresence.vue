@@ -178,76 +178,76 @@
 </template>
 
 <script setup lang="ts">
-import type { LanyardActivity } from '~/composables/useDiscordPresence'
+import type { LanyardActivity } from "~/composables/useDiscordPresence";
 
-const { data: presence, status, refresh } = useDiscordPresence()
+const { data: presence, status, refresh } = useDiscordPresence();
 
-const visibility = useDocumentVisibility()
+const visibility = useDocumentVisibility();
 useIntervalFn(() => {
-  if (visibility.value === 'visible')
-    refresh()
-}, 30_000)
+  if (visibility.value === "visible")
+    refresh();
+}, 30_000);
 
-const now = useNow({ interval: 1000 })
+const now = useNow({ interval: 1000 });
 
-const displayName = computed(() => presence.value?.discord_user.global_name || presence.value?.discord_user.username)
+const displayName = computed(() => presence.value?.discord_user.global_name || presence.value?.discord_user.username);
 
 const avatarUrl = computed(() => {
-  const user = presence.value?.discord_user
+  const user = presence.value?.discord_user;
   if (!user?.avatar)
-    return 'https://cdn.discordapp.com/embed/avatars/0.png'
-  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=96`
-})
+    return "https://cdn.discordapp.com/embed/avatars/0.png";
+  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=96`;
+});
 
 const platform = computed(() => {
   if (!presence.value)
-    return null
+    return null;
   if (presence.value.active_on_discord_desktop)
-    return 'desktop'
+    return "desktop";
   if (presence.value.active_on_discord_mobile)
-    return 'mobile'
+    return "mobile";
   if (presence.value.active_on_discord_web)
-    return 'web'
-  return null
-})
+    return "web";
+  return null;
+});
 
-const customStatus = computed(() => presence.value?.activities.find(activity => activity.type === 4 && activity.state))
+const customStatus = computed(() => presence.value?.activities.find(activity => activity.type === 4 && activity.state));
 
 // Spotify gets its own block, custom status is shown above.
-const activities = computed(() => presence.value?.activities.filter(activity => activity.type !== 4 && !(activity.type === 2 && activity.name === 'Spotify')) ?? [])
+const activities = computed(() => presence.value?.activities.filter(activity => activity.type !== 4 && !(activity.type === 2 && activity.name === "Spotify")) ?? []);
 
-const activityVerbs: Record<LanyardActivity['type'], string> = {
-  0: 'playing',
-  1: 'streaming',
-  2: 'listening to',
-  3: 'watching',
-  4: '',
-  5: 'competing in'
-}
+const activityVerbs: Record<LanyardActivity["type"], string> = {
+  0: "playing",
+  1: "streaming",
+  2: "listening to",
+  3: "watching",
+  4: "",
+  5: "competing in"
+};
 
-const spotifyUrl = computed(() => presence.value?.spotify?.track_id ? `https://open.spotify.com/track/${presence.value.spotify.track_id}` : 'https://open.spotify.com')
+const spotifyUrl = computed(() => presence.value?.spotify?.track_id ? `https://open.spotify.com/track/${presence.value.spotify.track_id}` : "https://open.spotify.com");
 const spotifyDuration = computed(() => {
-  const timestamps = presence.value?.spotify?.timestamps
-  return timestamps ? timestamps.end - timestamps.start : 0
-})
+  const timestamps = presence.value?.spotify?.timestamps;
+  return timestamps ? timestamps.end - timestamps.start : 0;
+});
 const spotifyElapsed = computed(() => {
-  const timestamps = presence.value?.spotify?.timestamps
+  const timestamps = presence.value?.spotify?.timestamps;
   if (!timestamps)
-    return 0
-  return Math.min(Math.max(now.value.getTime() - timestamps.start, 0), spotifyDuration.value)
-})
-const spotifyProgress = computed(() => spotifyDuration.value ? spotifyElapsed.value / spotifyDuration.value : 0)
+    return 0;
+  return Math.min(Math.max(now.value.getTime() - timestamps.start, 0), spotifyDuration.value);
+});
+const spotifyProgress = computed(() => spotifyDuration.value ? spotifyElapsed.value / spotifyDuration.value : 0);
 
 function formatClock(ms: number) {
-  const seconds = Math.floor(ms / 1000)
-  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+  const seconds = Math.floor(ms / 1000);
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
 function formatSince(start: number) {
-  const minutes = Math.max(1, Math.round((now.value.getTime() - start) / 60_000))
+  const minutes = Math.max(1, Math.round((now.value.getTime() - start) / 60_000));
   if (minutes < 60)
-    return `${minutes} min`
-  const hours = Math.floor(minutes / 60)
-  return `${hours} h ${minutes % 60} min`
+    return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  return `${hours} h ${minutes % 60} min`;
 }
 </script>

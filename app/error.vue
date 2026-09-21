@@ -43,22 +43,22 @@
 </template>
 
 <script setup lang="ts">
-import type { NuxtError } from '#app'
+import type { NuxtError } from "#app";
 
 const { error } = defineProps<{
-  error: NuxtError
-}>()
+  error: NuxtError;
+}>();
 
-const isNotFound = computed(() => error.statusCode === 404)
+const isNotFound = computed(() => error.statusCode === 404);
 
 useHead({
   htmlAttrs: {
-    lang: 'en'
+    lang: "en"
   }
-})
+});
 
 useSeoMeta({
-  title: isNotFound.value ? 'Page not found' : 'Error',
-  description: 'This page could not be found.'
-})
+  title: isNotFound.value ? "Page not found" : "Error",
+  description: "This page could not be found."
+});
 </script>

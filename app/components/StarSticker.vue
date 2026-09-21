@@ -27,14 +27,14 @@
 </template>
 
 <script setup lang="ts">
-const { variant = 'sticker', twinkle = false } = defineProps<{
-  variant?: 'sticker' | 'solid' | 'outline'
-  twinkle?: boolean
-}>()
+const { variant = "sticker", twinkle = false } = defineProps<{
+  variant?: "sticker" | "solid" | "outline";
+  twinkle?: boolean;
+}>();
 
 const variants = {
-  sticker: 'fill-primary-300 stroke-primary-500',
-  solid: 'fill-primary-500 stroke-primary-500',
-  outline: 'fill-none stroke-current'
-}
+  sticker: "fill-primary-300 stroke-primary-500",
+  solid: "fill-primary-500 stroke-primary-500",
+  outline: "fill-none stroke-current"
+};
 </script>

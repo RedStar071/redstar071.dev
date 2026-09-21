@@ -75,25 +75,25 @@
 </template>
 
 <script setup lang="ts">
-const { data: page } = await useAsyncData('blog-page', () => queryCollection('pages').path('/blog').first())
+const { data: page } = await useAsyncData("blog-page", () => queryCollection("pages").path("/blog").first());
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
 }
 
-const { data: posts } = await useAsyncData('blog-posts', () => queryCollection('blog').order('date', 'DESC').all())
+const { data: posts } = await useAsyncData("blog-posts", () => queryCollection("blog").order("date", "DESC").all());
 
-const { socials } = useAppConfig()
-const github = socials.find(social => social.label === 'GitHub')
+const { socials } = useAppConfig();
+const github = socials.find(social => social.label === "GitHub");
 
 useSeoMeta({
-  title: 'writing',
+  title: "writing",
   ogTitle: page.value.title,
   description: page.value.description,
   ogDescription: page.value.description
-})
+});
 
-defineOgImageComponent('Profile', {
+defineOgImageComponent("Profile", {
   title: page.value.title,
   description: page.value.description
-})
+});
 </script>

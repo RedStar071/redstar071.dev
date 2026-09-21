@@ -94,22 +94,22 @@
 </template>
 
 <script setup lang="ts">
-const { data: page } = await useAsyncData('projects-page', () => queryCollection('pages').path('/projects').first())
+const { data: page } = await useAsyncData("projects-page", () => queryCollection("pages").path("/projects").first());
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
 }
 
-const { data: projects } = await useAsyncData('projects', () => queryCollection('projects').order('order', 'ASC').all())
+const { data: projects } = await useAsyncData("projects", () => queryCollection("projects").order("order", "ASC").all());
 
 useSeoMeta({
-  title: 'projects',
+  title: "projects",
   ogTitle: page.value.title,
   description: page.value.description,
   ogDescription: page.value.description
-})
+});
 
-defineOgImageComponent('Profile', {
+defineOgImageComponent("Profile", {
   title: page.value.title,
   description: page.value.description
-})
+});
 </script>

@@ -17,51 +17,51 @@
 </template>
 
 <script setup lang="ts">
-const colorMode = useColorMode()
-const { global } = useAppConfig()
+const colorMode = useColorMode();
+const { global } = useAppConfig();
 
 // Matches --ui-bg: night-950 in dark mode, night-100 in light mode.
-const color = computed(() => colorMode.value === 'dark' ? '#0a0e12' : '#f1f4f7')
+const color = computed(() => colorMode.value === "dark" ? "#0a0e12" : "#f1f4f7");
 
 useHead({
   meta: [
-    { charset: 'utf-8' },
-    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { key: 'theme-color', name: 'theme-color', content: color }
+    { charset: "utf-8" },
+    { name: "viewport", content: "width=device-width, initial-scale=1" },
+    { key: "theme-color", name: "theme-color", content: color }
   ],
   link: [
-    { rel: 'icon', href: '/favicon.ico' }
+    { rel: "icon", href: "/favicon.ico" }
   ],
   htmlAttrs: {
-    lang: 'en'
+    lang: "en"
   }
-})
+});
 
 useSeoMeta({
   titleTemplate: `%s · ${global.name}`,
-  twitterCard: 'summary_large_image',
-  twitterCreator: '@redstar071'
-})
+  twitterCard: "summary_large_image",
+  twitterCreator: "@redstar071"
+});
 
-defineOgImageComponent('Profile')
+defineOgImageComponent("Profile");
 
 const [{ data: navigation }, { data: files }] = await Promise.all([
-  useAsyncData('navigation', () => {
+  useAsyncData("navigation", () => {
     return Promise.all([
-      queryCollectionNavigation('blog')
-    ])
+      queryCollectionNavigation("blog")
+    ]);
   }, {
     transform: data => data.flat()
   }),
-  useLazyAsyncData('search', () => {
+  useLazyAsyncData("search", () => {
     return Promise.all([
-      queryCollectionSearchSections('blog')
-    ])
+      queryCollectionSearchSections("blog")
+    ]);
   }, {
     server: false,
     transform: data => data.flat()
   })
-])
+]);
 
-provide('navigation', navigation)
+provide("navigation", navigation);
 </script>
