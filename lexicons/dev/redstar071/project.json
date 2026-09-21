@@ -1,0 +1,29 @@
+{
+  "lexicon": 1,
+  "id": "dev.redstar071.project",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "any",
+      "description": "A project shown on redstar071.dev. The record key is the project's slug, and the site falls back to content/projects/*.yml when no records are readable.",
+      "record": {
+        "type": "object",
+        "required": ["title", "description", "role", "repo", "tags", "since", "status", "featured", "order"],
+        "properties": {
+          "title": { "type": "string", "maxLength": 256 },
+          "description": { "type": "string", "maxLength": 2500 },
+          "role": { "type": "string", "maxLength": 128, "description": "What I do on it, e.g. maintainer." },
+          "logo": { "type": "string", "maxLength": 512, "description": "Path of an image under public/, e.g. /logos/wolfstar.svg." },
+          "icon": { "type": "string", "maxLength": 128, "description": "Icon name used when there is no logo." },
+          "url": { "type": "string", "format": "uri", "description": "The project's website, if it has one." },
+          "repo": { "type": "string", "format": "uri" },
+          "tags": { "type": "array", "maxLength": 16, "items": { "type": "string", "maxLength": 64 } },
+          "since": { "type": "integer", "minimum": 1970 },
+          "status": { "type": "string", "knownValues": ["active", "in development", "archived"] },
+          "featured": { "type": "boolean", "default": false },
+          "order": { "type": "integer", "description": "Lower values render first." }
+        }
+      }
+    }
+  }
+}

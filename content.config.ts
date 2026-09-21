@@ -1,4 +1,10 @@
-import { defineCollection, defineContentConfig, z } from "@nuxt/content";
+import type { ProjectRecord } from "./shared/atproto";
+import { readdir, readFile } from "node:fs/promises";
+import { basename, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { defineCollection, defineCollectionSource, defineContentConfig, z } from "@nuxt/content";
+import { parse } from "yaml";
+import { COLLECTIONS, isProjectRecord, listRecords } from "./shared/atproto";
 
 function createBaseSchema() {
   return z.object({
@@ -25,6 +31,58 @@ function createAuthorSchema() {
     }).optional()
   });
 }
+
+const projectsDir = fileURLToPath(new URL("./content/projects", import.meta.url));
+
+/** The `content/projects/*.yml` files, used when the PDS has no readable projects. */
+async function readProjectFiles(): Promise<Map<string, ProjectRecord>> {
+  const projects = new Map<string, ProjectRecord>();
+  for (const file of (await readdir(projectsDir)).filter(name => name.endsWith(".yml"))) {
+    projects.set(basename(file, ".yml"), parse(await readFile(join(projectsDir, file), "utf8")));
+  }
+  return projects;
+}
+
+/**
+ * Projects are `dev.redstar071.project` records in the PDS. Any failure to read
+ * them (offline, PDS down, nothing published yet) falls back to the YAML files,
+ * so a build never depends on the network being up.
+ */
+let projectsRequest: Promise<Map<string, ProjectRecord>> | undefined;
+function loadProjects() {
+  projectsRequest ??= (async () => {
+    try {
+      const records = await listRecords(COLLECTIONS.project);
+      const projects = new Map<string, ProjectRecord>();
+      for (const record of records) {
+        if (isProjectRecord(record.value)) {
+          projects.set(record.rkey, record.value);
+        } else {
+          console.warn(`[projects] ignoring ${record.uri}: it does not match the project shape`);
+        }
+      }
+      if (projects.size > 0) {
+        return projects;
+      }
+      console.info("[projects] no records in the PDS yet, using content/projects/*.yml");
+    } catch (error) {
+      console.warn(`[projects] could not read the PDS (${error instanceof Error ? error.message : error}), using content/projects/*.yml`);
+    }
+    return readProjectFiles();
+  })();
+  return projectsRequest;
+}
+
+const projectsSource = defineCollectionSource({
+  getKeys: async () => [...(await loadProjects()).keys()].map(rkey => `${rkey}.json`),
+  getItem: async (key) => {
+    const project = (await loadProjects()).get(key.replace(/\.json$/, ""));
+    if (!project) {
+      throw new Error(`unknown project ${key}`);
+    }
+    return { ...project };
+  }
+});
 
 export default defineContentConfig({
   collections: {
@@ -53,7 +111,7 @@ export default defineContentConfig({
     }),
     projects: defineCollection({
       type: "data",
-      source: "projects/*.yml",
+      source: projectsSource,
       schema: z.object({
         title: z.string().nonempty(),
         description: z.string().nonempty(),
@@ -75,6 +133,8 @@ export default defineContentConfig({
       schema: z.object({
         minRead: z.number(),
         date: z.date(),
+        // at:// URI of the Bluesky post announcing this article; its replies show as comments
+        bluesky: z.string().startsWith("at://").optional(),
         image: z.string().editor({ input: "media" }).optional(),
         author: createAuthorSchema().optional()
       })

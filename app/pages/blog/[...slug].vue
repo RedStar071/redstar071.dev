@@ -54,6 +54,10 @@
       />
     </div>
 
+    <ClientOnly v-if="page.bluesky">
+      <BlueskyComments :uri="page.bluesky" />
+    </ClientOnly>
+
     <USeparator class="my-10" />
 
     <UContentSurround :surround />
@@ -62,6 +66,7 @@
 
 <script setup lang="ts">
 import { withoutTrailingSlash } from "ufo";
+import { documentUri } from "~~/shared/atproto";
 
 const route = useRoute();
 const routePath = computed(() => withoutTrailingSlash(route.path));
@@ -84,6 +89,17 @@ useSeoMeta({
   description,
   ogTitle: title,
   ogDescription: description
+});
+
+// Points standard.site readers at this post's `site.standard.document` record,
+// which `pnpm atproto:publish` writes under the same key.
+useHead({
+  link: [{
+    // Unhead only types the standard `rel` values, and this one is standard.site's own.
+    // @ts-expect-error custom rel
+    rel: "site.standard.document",
+    href: documentUri({ date: page.value.date, slug: routePath.value.split("/").pop()! })
+  }]
 });
 
 defineOgImageComponent("Profile", { title, description });
