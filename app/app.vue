@@ -43,6 +43,10 @@ useSeoMeta({
   twitterCreator: "@redstar071"
 });
 
+useHead({
+  link: [{ rel: "alternate", type: "application/rss+xml", title: global.name, href: "/rss.xml" }]
+});
+
 defineOgImageComponent("Profile");
 
 const [{ data: navigation }, { data: files }] = await Promise.all([
