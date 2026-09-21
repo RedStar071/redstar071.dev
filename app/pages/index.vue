@@ -173,4 +173,6 @@ defineOgImageComponent("Profile", {
   title: page.value.title,
   description: page.value.description
 });
+
+useComponentEmbed(site => buildProfileCard(site, page.value!, featured.value));
 </script>

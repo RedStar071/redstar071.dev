@@ -96,4 +96,6 @@ defineOgImageComponent("Profile", {
   title: page.value.title,
   description: page.value.description
 });
+
+useComponentEmbed(site => buildWritingCard(site, page.value!, posts.value ?? []));
 </script>
