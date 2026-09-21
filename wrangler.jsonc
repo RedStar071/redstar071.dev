@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "redstar071-dev",
+  "compatibility_date": "2026-06-30",
+  // The site is fully prerendered (`nuxt generate`), so this Worker only serves static assets.
+  "assets": {
+    "directory": ".output/public",
+    "not_found_handling": "404-page"
+  }
+}
