@@ -24,6 +24,7 @@ import {
   resolvePds,
   SITE_URL
 } from "../shared/atproto.ts";
+import { findAnnouncement, persistAnnouncement } from "./_discover.ts";
 import { createSession, readFlags } from "./_session.ts";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -32,6 +33,7 @@ const wellKnownPath = join(root, "public/.well-known/site.standard.publication")
 const { dryRun, prune } = readFlags();
 
 interface Post {
+  file: string;
   slug: string;
   title: string;
   description: string;
@@ -70,6 +72,7 @@ async function readPosts(): Promise<Post[]> {
       throw new Error(`${file} needs a title and a date`);
     }
     posts.push({
+      file: join(blogDir, file),
       slug: basename(file, ".md"),
       title: data.title,
       description: typeof data.description === "string" ? data.description : "",
@@ -116,6 +119,19 @@ async function resolveBskyPostRef(uri: string | undefined) {
 }
 
 const posts = await readPosts();
+
+// A post without a `bluesky` key may have been announced since it was written.
+for (const post of posts.filter(post => !post.bluesky)) {
+  const uri = await findAnnouncement({ url: `${SITE_URL}/blog/${post.slug}`, publishedAt: new Date(post.date) });
+  if (uri) {
+    post.bluesky = uri;
+    console.info(`announcement ${uri}  /blog/${post.slug}`);
+    if (!dryRun) {
+      await persistAnnouncement(post.file, uri);
+    }
+  }
+}
+
 const wellKnownMatches = existsSync(wellKnownPath) && (await readFile(wellKnownPath, "utf8")) === PUBLICATION_URI;
 
 console.info(`publication  ${PUBLICATION_URI}`);
