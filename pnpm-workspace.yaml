@@ -1,9 +1,16 @@
-ignoredBuiltDependencies:
-  - "@parcel/watcher"
-  - "@tailwindcss/oxide"
-  - esbuild
-  - unrs-resolver
-  - vue-demi
+shellEmulator: true
 
-onlyBuiltDependencies:
-  - sharp
+trustPolicy: no-downgrade
+
+# Legacy 6.x line (pulled in by Babel) predates npm provenance.
+trustPolicyExclude:
+  - semver@6.3.1
+
+allowBuilds:
+  "@parcel/watcher": false
+  "@tailwindcss/oxide": false
+  esbuild: false
+  sharp: true
+  unrs-resolver: false
+  vue-demi: false
+  workerd: false
