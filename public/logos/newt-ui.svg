@@ -1,0 +1,24 @@
+<!--
+  The installed app's icon, and the source every other icon is rasterised from.
+  The mark is the one the site header wears: four strokes at four heights with
+  one bar struck through them, a level meter caught mid signal.
+
+  The header draws it in `currentColor` so it follows the theme. This copy
+  cannot: an installed icon sits on somebody else's home screen, on a
+  background nobody here chooses, so it carries its own colours.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="newt/ui">
+  <rect width="64" height="64" rx="16" fill="#5865f2" />
+  <g
+    transform="translate(9.6 9.6) scale(1.8667)"
+    stroke="#ffffff"
+    stroke-width="2.2"
+    stroke-linecap="round"
+  >
+    <line x1="4" y1="7" x2="4" y2="20" />
+    <line x1="9.3" y1="11" x2="9.3" y2="20" />
+    <line x1="14.7" y1="4" x2="14.7" y2="20" />
+    <line x1="20" y1="9" x2="20" y2="20" />
+    <line x1="2.4" y1="15.4" x2="21.6" y2="15.4" />
+  </g>
+</svg>

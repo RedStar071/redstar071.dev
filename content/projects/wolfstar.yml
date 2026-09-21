@@ -1,0 +1,11 @@
+title: WolfStar
+description: "A multipurpose Discord bot built around moderation, with a web dashboard to manage every server setting. Fork of Skyra."
+role: maintainer
+logo: /logos/wolfstar.svg
+url: https://wolfstar.rocks
+repo: https://github.com/wolfstar-project/wolfstar
+tags: [TypeScript, discord.js, Sapphire]
+since: 2024
+status: active
+featured: true
+order: 1

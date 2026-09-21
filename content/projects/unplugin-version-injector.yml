@@ -1,0 +1,10 @@
+title: unplugin-version-injector
+description: "Injects your package version or build date into built files. Works with Vite, Rollup, Rolldown, esbuild, Webpack, Rspack and Farm."
+role: author
+icon: i-material-symbols-extension-outline-rounded
+repo: https://github.com/RedStar071/unplugin-version-injector
+tags: [TypeScript, unplugin]
+since: 2026
+status: active
+featured: true
+order: 4

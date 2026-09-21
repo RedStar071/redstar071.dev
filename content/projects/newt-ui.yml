@@ -1,0 +1,11 @@
+title: newt-ui
+description: "Discord-styled component library for React, Vue and plain HTML/CSS, built on one shared design token system."
+role: maintainer
+logo: /logos/newt-ui.svg
+url: https://newtui.dev
+repo: https://github.com/wolfstar-project/newt-ui
+tags: [Vue, React, CSS]
+since: 2026
+status: active
+featured: true
+order: 3

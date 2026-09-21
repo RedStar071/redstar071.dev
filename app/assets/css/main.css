@@ -4,22 +4,133 @@
 @source "../../../content/**/*";
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
-  --font-serif: 'Instrument Serif', serif;
+  --font-sans: "Google Sans Flex", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Google Sans Code", ui-monospace, SFMono-Regular, monospace;
+
+  /* Night: neutrals tinted toward the WolfStar navy (hue 255) so the red reads warm against them. */
+  --color-night-50: oklch(98.4% 0.003 255);
+  --color-night-100: oklch(96.6% 0.005 255);
+  --color-night-200: oklch(92.4% 0.008 255);
+  --color-night-300: oklch(86.8% 0.011 255);
+  --color-night-400: oklch(71.2% 0.015 255);
+  --color-night-500: oklch(55.4% 0.017 255);
+  --color-night-600: oklch(44.6% 0.017 255);
+  --color-night-700: oklch(37.2% 0.017 255);
+  --color-night-800: oklch(27.8% 0.016 255);
+  --color-night-900: oklch(21.4% 0.014 255);
+  --color-night-950: oklch(16% 0.012 255);
+
+  /* Material 3 expressive springs, approximated as cubic-beziers. */
+  --ease-spatial: cubic-bezier(0.38, 1.21, 0.22, 1);
+  --ease-effects: cubic-bezier(0.34, 0.8, 0.34, 1);
+
+  --animate-rise: rise 0.7s var(--ease-spatial) calc(var(--i, 0) * 70ms + 60ms) both;
+  --animate-twinkle: twinkle 4.8s ease-in-out var(--delay, 0s) infinite;
+  --animate-drift: drift 36s linear infinite;
+  --animate-spin-slow: spin 24s linear infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+    }
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    45% {
+      transform: scale(0.72) rotate(-14deg);
+      opacity: 0.55;
+    }
+    60% {
+      transform: scale(1.08) rotate(6deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes drift {
+    to {
+      transform: translateX(-720px);
+    }
+  }
 }
 
 :root {
-  --ui-container: var(--container-4xl);
+  --ui-container: var(--container-6xl);
+  --ui-radius: 0.5rem;
+
+  --ui-primary: var(--ui-color-primary-700);
+  --ui-bg: var(--ui-color-neutral-100);
+  --ui-bg-muted: var(--color-white);
+  --ui-bg-elevated: var(--ui-color-neutral-100);
+  --ui-bg-accented: var(--ui-color-neutral-200);
+  --ui-border: var(--ui-color-neutral-200);
+  --ui-border-muted: var(--ui-color-neutral-200);
+  --ui-text-muted: var(--ui-color-neutral-600);
 
   ::selection {
-    color: #282a30;
-    background-color: #c8c8c8;
+    color: var(--ui-color-primary-950);
+    background-color: var(--ui-color-primary-200);
   }
 }
 
 .dark {
+  --ui-primary: var(--ui-color-primary-400);
+  --ui-bg: var(--ui-color-neutral-950);
+  --ui-bg-muted: var(--ui-color-neutral-900);
+  --ui-bg-elevated: var(--ui-color-neutral-800);
+  --ui-bg-accented: var(--ui-color-neutral-700);
+  --ui-border: var(--ui-color-neutral-800);
+  --ui-border-muted: var(--ui-color-neutral-800);
+  --ui-border-accented: var(--ui-color-neutral-700);
+  --ui-text-muted: var(--ui-color-neutral-400);
+
   ::selection {
-    color: #ffffff;
-    background-color: #474747;
+    color: var(--ui-color-primary-50);
+    background-color: var(--ui-color-primary-800);
+  }
+}
+
+/* Google Sans Flex ships a roundness axis; display type leans on it for the soft, sticker-like voice. */
+@utility font-round {
+  font-variation-settings: "ROND" 100;
+}
+
+/* Material 3 expressive shapes, generated as polar curves in a 100x100 box. Used as masks. */
+@utility shape-cookie {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M97.2 51.4L95.1 54.3L93.5 57.1L92.8 59.9L93.1 62.9L94 66.3L94.8 69.9L94.9 73.5L93.9 76.7L91.7 79.2L88.5 80.9L84.9 82L81.6 82.9L78.8 84.2L76.7 86.2L75.1 88.9L73.6 92.2L71.7 95.4L69.3 98L66.3 99.3L62.9 99.3L59.3 98.3L56 96.8L52.9 95.5L50 95L47.1 95.5L44 96.8L40.7 98.3L37.1 99.3L33.7 99.3L30.7 98L28.3 95.4L26.4 92.2L24.9 88.9L23.3 86.2L21.2 84.2L18.4 82.9L15.1 82L11.5 80.9L8.3 79.2L6.1 76.7L5.1 73.5L5.2 69.9L6 66.3L6.9 62.9L7.2 59.9L6.5 57.1L4.9 54.3L2.8 51.4L1 48.2L0 44.8L0.3 41.5L2 38.5L4.7 36L7.7 33.8L10.4 31.8L12.2 29.6L13.2 26.8L13.7 23.5L14 19.8L14.9 16.2L16.6 13.3L19.3 11.4L22.7 10.5L26.4 10.5L30 10.8L33.2 10.8L36 10L38.4 8.2L40.9 5.8L43.7 3.3L46.7 1.4L50 0.7L53.3 1.4L56.3 3.3L59.1 5.8L61.6 8.2L64 10L66.8 10.8L70 10.8L73.6 10.5L77.3 10.5L80.7 11.4L83.4 13.3L85.1 16.2L86 19.8L86.3 23.5L86.8 26.8L87.8 29.6L89.6 31.8L92.3 33.8L95.3 36L98 38.5L99.7 41.5L100 44.8L99 48.2Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+@utility shape-burst {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 50L97.7 53.1L92.9 55.7L89.7 57.9L88.6 60.4L88.3 63L90 66.6L92.8 71.1L93.3 75L89.7 76.5L84.4 76.4L80.4 76.7L78.3 78.3L76.7 80.4L76.4 84.4L76.5 89.7L75 93.3L71.1 92.8L66.6 90L63 88.3L60.4 88.6L57.9 89.7L55.7 92.9L53.1 97.7L50 100L46.9 97.7L44.3 92.9L42.1 89.7L39.6 88.6L37 88.3L33.4 90L28.9 92.8L25 93.3L23.5 89.7L23.6 84.4L23.3 80.4L21.7 78.3L19.6 76.7L15.6 76.4L10.3 76.5L6.7 75L7.2 71.1L10 66.6L11.7 63L11.4 60.4L10.3 57.9L7.1 55.7L2.3 53.1L0 50L2.3 46.9L7.1 44.3L10.3 42.1L11.4 39.6L11.7 37L10 33.4L7.2 28.9L6.7 25L10.3 23.5L15.6 23.6L19.6 23.3L21.7 21.7L23.3 19.6L23.6 15.6L23.5 10.3L25 6.7L28.9 7.2L33.4 10L37 11.7L39.6 11.4L42.1 10.3L44.3 7.1L46.9 2.3L50 0L53.1 2.3L55.7 7.1L57.9 10.3L60.4 11.4L63 11.7L66.6 10L71.1 7.2L75 6.7L76.5 10.3L76.4 15.6L76.7 19.6L78.3 21.7L80.4 23.3L84.4 23.6L89.7 23.5L93.3 25L92.8 28.9L90 33.4L88.3 37L88.6 39.6L89.7 42.1L92.9 44.3L97.7 46.9Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+@utility shape-flower {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 50L99.3 53.2L97.4 56.2L94.4 58.8L90.7 60.9L86.7 62.5L83.3 63.8L84.8 67.1L86.5 71L87.6 75.1L87.9 79.1L87.2 82.6L85.4 85.4L82.6 87.2L79.1 87.9L75.1 87.6L71 86.5L67.1 84.8L63.8 83.3L62.5 86.7L60.9 90.7L58.8 94.4L56.2 97.4L53.2 99.3L50 100L46.8 99.3L43.8 97.4L41.2 94.4L39.1 90.7L37.5 86.7L36.2 83.3L32.9 84.8L29 86.5L24.9 87.6L20.9 87.9L17.4 87.2L14.6 85.4L12.8 82.6L12.1 79.1L12.4 75.1L13.5 71L15.2 67.1L16.7 63.8L13.3 62.5L9.3 60.9L5.6 58.8L2.6 56.2L0.7 53.2L0 50L0.7 46.8L2.6 43.8L5.6 41.2L9.3 39.1L13.3 37.5L16.7 36.2L15.2 32.9L13.5 29L12.4 24.9L12.1 20.9L12.8 17.4L14.6 14.6L17.4 12.8L20.9 12.1L24.9 12.4L29 13.5L32.9 15.2L36.2 16.7L37.5 13.3L39.1 9.3L41.2 5.6L43.8 2.6L46.8 0.7L50 0L53.2 0.7L56.2 2.6L58.8 5.6L60.9 9.3L62.5 13.3L63.8 16.7L67.1 15.2L71 13.5L75.1 12.4L79.1 12.1L82.6 12.8L85.4 14.6L87.2 17.4L87.9 20.9L87.6 24.9L86.5 29L84.8 32.9L83.3 36.2L86.7 37.5L90.7 39.1L94.4 41.2L97.4 43.8L99.3 46.8Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+@utility shape-clover {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 50L99.7 53.3L98.8 56.4L97.4 59.4L95.5 62.2L93.2 64.6L90.5 66.8L87.7 68.6L84.7 70L81.7 71.2L78.9 72.2L76.3 73L74 74L73 76.3L72.2 78.9L71.2 81.7L70 84.7L68.6 87.7L66.8 90.5L64.6 93.2L62.2 95.5L59.4 97.4L56.4 98.8L53.3 99.7L50 100L46.7 99.7L43.6 98.8L40.6 97.4L37.8 95.5L35.4 93.2L33.2 90.5L31.4 87.7L30 84.7L28.8 81.7L27.8 78.9L27 76.3L26 74L23.7 73L21.1 72.2L18.3 71.2L15.3 70L12.3 68.6L9.5 66.8L6.8 64.6L4.5 62.2L2.6 59.4L1.2 56.4L0.3 53.3L0 50L0.3 46.7L1.2 43.6L2.6 40.6L4.5 37.8L6.8 35.4L9.5 33.2L12.3 31.4L15.3 30L18.3 28.8L21.1 27.8L23.7 27L26 26L27 23.7L27.8 21.1L28.8 18.3L30 15.3L31.4 12.3L33.2 9.5L35.4 6.8L37.8 4.5L40.6 2.6L43.6 1.2L46.7 0.3L50 0L53.3 0.3L56.4 1.2L59.4 2.6L62.2 4.5L64.6 6.8L66.8 9.5L68.6 12.3L70 15.3L71.2 18.3L72.2 21.1L73 23.7L74 26L76.3 27L78.9 27.8L81.7 28.8L84.7 30L87.7 31.4L90.5 33.2L93.2 35.4L95.5 37.8L97.4 40.6L98.8 43.6L99.7 46.7Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+@utility shape-sunny {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 50L99.4 53.2L97.8 56.3L95.7 59.1L93.6 61.7L91.9 64.2L90.7 66.8L89.7 69.6L89.1 72.6L88.8 75.9L88.3 79.4L87.2 82.7L85.4 85.4L82.7 87.2L79.4 88.3L75.9 88.8L72.6 89.1L69.6 89.7L66.8 90.7L64.2 91.9L61.7 93.6L59.1 95.7L56.3 97.8L53.2 99.4L50 100L46.8 99.4L43.7 97.8L40.9 95.7L38.3 93.6L35.8 91.9L33.2 90.7L30.4 89.7L27.4 89.1L24.1 88.8L20.6 88.3L17.3 87.2L14.6 85.4L12.8 82.7L11.7 79.4L11.2 75.9L10.9 72.6L10.3 69.6L9.3 66.8L8.1 64.2L6.4 61.7L4.3 59.1L2.2 56.3L0.6 53.2L0 50L0.6 46.8L2.2 43.7L4.3 40.9L6.4 38.3L8.1 35.8L9.3 33.2L10.3 30.4L10.9 27.4L11.2 24.1L11.7 20.6L12.8 17.3L14.6 14.6L17.3 12.8L20.6 11.7L24.1 11.2L27.4 10.9L30.4 10.3L33.2 9.3L35.8 8.1L38.3 6.4L40.9 4.3L43.7 2.2L46.8 0.6L50 0L53.2 0.6L56.3 2.2L59.1 4.3L61.7 6.4L64.2 8.1L66.8 9.3L69.6 10.3L72.6 10.9L75.9 11.2L79.4 11.7L82.7 12.8L85.4 14.6L87.2 17.3L88.3 20.6L88.8 24.1L89.1 27.4L89.7 30.4L90.7 33.2L91.9 35.8L93.6 38.3L95.7 40.9L97.8 43.7L99.4 46.8Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+@utility shape-star {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M54.9 8.7L63.4 23.8Q65.8 28.1 70.7 29.1L87.7 32.5Q97.5 34.5 90.7 41.9L79.0 54.6Q75.6 58.3 76.2 63.3L78.2 80.5Q79.3 90.4 70.3 86.2L54.5 79.0Q50 77 45.4 79.0L29.7 86.2Q20.6 90.4 21.7 80.5L23.7 63.3Q24.3 58.3 20.9 54.6L9.2 41.9Q2.4 34.5 12.2 32.5L29.2 29.1Q34.1 28.1 36.5 23.8L45.0 8.7Q50 0 54.9 8.7Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

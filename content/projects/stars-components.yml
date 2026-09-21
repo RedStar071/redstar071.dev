@@ -1,0 +1,11 @@
+title: Stars Components
+description: "HTTP-first TypeScript framework and toolkit for building Discord applications, plus a set of plugins on top."
+role: maintainer
+logo: /logos/stars-components.svg
+url: https://stars-components.js.org
+repo: https://github.com/wolfstar-project/stars-components
+tags: [TypeScript, Discord API, serverless]
+since: 2026
+status: active
+featured: true
+order: 2

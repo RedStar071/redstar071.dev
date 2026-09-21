@@ -1,0 +1,11 @@
+title: wolfstar.rocks
+description: "The website and dashboard for WolfStar, built with Nuxt."
+role: maintainer
+icon: i-material-symbols-dashboard-outline-rounded
+url: https://wolfstar.rocks
+repo: https://github.com/wolfstar-project/wolfstar.rocks
+tags: [Nuxt, Vue, Tailwind CSS]
+since: 2024
+status: active
+featured: false
+order: 5

@@ -1,81 +1,99 @@
+<template>
+  <UContainer
+    v-if="page"
+    class="py-12 sm:py-16"
+  >
+    <header class="max-w-2xl motion-safe:animate-rise">
+      <ShapeBadge
+        icon="i-material-symbols-ink-pen-outline-rounded"
+        shape="star"
+        tone="solid"
+      />
+      <h1 class="mt-5 text-5xl leading-none font-black tracking-tight text-balance text-highlighted font-round sm:text-6xl">
+        {{ page.title }}
+      </h1>
+      <p class="mt-4 text-lg text-pretty text-toned">
+        {{ page.description }}
+      </p>
+    </header>
+
+    <ul
+      v-if="posts?.length"
+      class="mt-10 border-t border-dashed border-default"
+    >
+      <li
+        v-for="(post, index) in posts"
+        :key="post.path"
+        class="border-b border-dashed border-default motion-safe:animate-rise"
+        :style="{ '--i': index + 1 }"
+      >
+        <ULink
+          :to="post.path"
+          raw
+          class="group -mx-3 flex items-baseline gap-4 rounded-md px-3 py-5 transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-primary sm:gap-8"
+        >
+          <time
+            :datetime="new Date(post.date).toISOString()"
+            class="w-28 shrink-0 font-mono text-sm text-muted max-sm:hidden"
+          >{{ formatDate(post.date) }}</time>
+          <span class="min-w-0 flex-1">
+            <span class="block text-lg font-medium text-highlighted">{{ post.title }}</span>
+            <span class="mt-1 block text-pretty text-muted">{{ post.description }}</span>
+            <span class="mt-2 block font-mono text-xs text-muted sm:hidden">{{ formatDate(post.date) }} · {{ post.minRead }} min read</span>
+          </span>
+          <UIcon
+            name="i-material-symbols-arrow-forward-rounded"
+            class="size-5 shrink-0 self-center text-muted transition-[translate,color] duration-300 ease-(--ease-spatial) group-hover:translate-x-1 group-hover:text-primary"
+          />
+        </ULink>
+      </li>
+    </ul>
+
+    <div
+      v-else
+      class="mt-10 flex flex-col items-start gap-4 rounded-2xl bg-muted p-6 sm:p-8"
+    >
+      <StarSticker
+        twinkle
+        class="size-12"
+      />
+      <h2 class="text-2xl font-medium text-highlighted">
+        nothing here yet
+      </h2>
+      <p class="max-w-lg text-pretty text-toned">
+        the first post is still being written. until then, the code does the talking on GitHub.
+      </p>
+      <UButton
+        :to="github?.to"
+        target="_blank"
+        label="see what i'm building"
+        icon="i-simple-icons-github"
+        variant="soft"
+      />
+    </div>
+  </UContainer>
+</template>
+
 <script setup lang="ts">
-const { data: page } = await useAsyncData('blog-page', () => {
-  return queryCollection('pages').path('/blog').first()
-})
+const { data: page } = await useAsyncData('blog-page', () => queryCollection('pages').path('/blog').first())
 if (!page.value) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Page not found',
-    fatal: true
-  })
-}
-const { data: posts } = await useAsyncData('blogs', () =>
-  queryCollection('blog').order('date', 'DESC').all()
-)
-if (!posts.value) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'blogs posts not found',
-    fatal: true
-  })
+  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
 
-const title = page.value?.seo?.title || page.value?.title
-const description = page.value?.seo?.description || page.value?.description
+const { data: posts } = await useAsyncData('blog-posts', () => queryCollection('blog').order('date', 'DESC').all())
+
+const { socials } = useAppConfig()
+const github = socials.find(social => social.label === 'GitHub')
 
 useSeoMeta({
-  title,
-  ogTitle: title,
-  description,
-  ogDescription: description
+  title: 'writing',
+  ogTitle: page.value.title,
+  description: page.value.description,
+  ogDescription: page.value.description
 })
 
-defineOgImage('Portfolio', { title, description })
+defineOgImageComponent('Profile', {
+  title: page.value.title,
+  description: page.value.description
+})
 </script>
-
-<template>
-  <UPage v-if="page">
-    <UPageHero
-      :title="page.title"
-      :description="page.description"
-      :links="page.links"
-      :ui="{
-        title: 'mx-0! text-left',
-        description: 'mx-0! text-left',
-        links: 'justify-start'
-      }"
-    />
-    <UPageSection
-      :ui="{
-        container: 'pt-0!'
-      }"
-    >
-      <UBlogPosts orientation="vertical">
-        <Motion
-          v-for="(post, index) in posts"
-          :key="index"
-          :initial="{ opacity: 0, transform: 'translateY(10px)' }"
-          :while-in-view="{ opacity: 1, transform: 'translateY(0)' }"
-          :transition="{ delay: 0.2 * index }"
-          :in-view-options="{ once: true }"
-        >
-          <UBlogPost
-            variant="naked"
-            orientation="horizontal"
-            :to="post.path"
-            v-bind="post"
-            :ui="{
-              root: 'md:grid md:grid-cols-2 group overflow-visible transition-all duration-300',
-              image:
-                'group-hover/blog-post:scale-105 rounded-lg shadow-lg border-4 border-muted ring-2 ring-default',
-              header:
-                index % 2 === 0
-                  ? 'sm:-rotate-1 overflow-visible'
-                  : 'sm:rotate-1 overflow-visible'
-            }"
-          />
-        </Motion>
-      </UBlogPosts>
-    </UPageSection>
-  </UPage>
-</template>

@@ -1,0 +1,10 @@
+title: Staryl
+description: "The original Star Network bot, for notifications and socials."
+role: maintainer
+logo: /logos/staryl.png
+repo: https://github.com/wolfstar-project/staryl
+tags: [TypeScript, serverless]
+since: 2024
+status: in development
+featured: false
+order: 6

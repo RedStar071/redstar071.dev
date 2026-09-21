@@ -1,7 +1,27 @@
+<template>
+  <UApp>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+
+    <ClientOnly>
+      <LazyUContentSearch
+        :files="files"
+        :navigation="navigation"
+        shortcut="meta_k"
+        :links="navLinks"
+        :fuse="{ resultLimit: 42 }"
+      />
+    </ClientOnly>
+  </UApp>
+</template>
+
 <script setup lang="ts">
 const colorMode = useColorMode()
+const { global } = useAppConfig()
 
-const color = computed(() => colorMode.value === 'dark' ? '#020618' : 'white')
+// Matches --ui-bg: night-950 in dark mode, night-100 in light mode.
+const color = computed(() => colorMode.value === 'dark' ? '#0a0e12' : '#f1f4f7')
 
 useHead({
   meta: [
@@ -18,9 +38,12 @@ useHead({
 })
 
 useSeoMeta({
-  titleTemplate: '%s - Nuxt Portfolio Template',
-  twitterCard: 'summary_large_image'
+  titleTemplate: `%s · ${global.name}`,
+  twitterCard: 'summary_large_image',
+  twitterCreator: '@redstar071'
 })
+
+defineOgImageComponent('Profile')
 
 const [{ data: navigation }, { data: files }] = await Promise.all([
   useAsyncData('navigation', () => {
@@ -39,23 +62,6 @@ const [{ data: navigation }, { data: files }] = await Promise.all([
     transform: data => data.flat()
   })
 ])
+
+provide('navigation', navigation)
 </script>
-
-<template>
-  <UApp>
-    <NuxtLayout>
-      <UMain class="relative">
-        <NuxtPage />
-      </UMain>
-    </NuxtLayout>
-
-    <ClientOnly>
-      <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
-        :links="navLinks"
-        :fuse="{ resultLimit: 42 }"
-      />
-    </ClientOnly>
-  </UApp>
-</template>
