@@ -29,7 +29,13 @@ export default defineNuxtConfig({
     fallback: "dark"
   },
 
-  compatibilityDate: "2024-11-01",
+  content: {
+    experimental: {
+      sqliteConnector: "native"
+    }
+  },
+
+  compatibilityDate: "2026-06-30",
 
   nitro: {
     prerender: {
@@ -83,6 +89,6 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    fonts: ["Google Sans Flex:400", "Google Sans Flex:800"]
+    zeroRuntime: true
   }
 });

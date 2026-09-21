@@ -61,15 +61,18 @@
 </template>
 
 <script setup lang="ts">
+import { withoutTrailingSlash } from "ufo";
+
 const route = useRoute();
+const routePath = computed(() => withoutTrailingSlash(route.path));
 const site = useSiteConfig();
 
-const { data: page } = await useAsyncData(route.path, () => queryCollection("blog").path(route.path).first());
+const { data: page } = await useAsyncData(routePath.value, () => queryCollection("blog").path(routePath.value).first());
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
 }
 
-const { data: surround } = await useAsyncData(`${route.path}-surround`, () => queryCollectionItemSurroundings("blog", route.path, {
+const { data: surround } = await useAsyncData(`${routePath.value}-surround`, () => queryCollectionItemSurroundings("blog", routePath.value, {
   fields: ["description"]
 }));
 
@@ -83,11 +86,7 @@ useSeoMeta({
   ogDescription: description
 });
 
-if (page.value.image) {
-  defineOgImage({ url: page.value.image });
-} else {
-  defineOgImageComponent("Profile", { title, description });
-}
+defineOgImageComponent("Profile", { title, description });
 
-const articleLink = computed(() => `${site.url}${route.path}`);
+const articleLink = computed(() => `${site.url}${routePath.value}`);
 </script>
