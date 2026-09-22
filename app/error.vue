@@ -21,7 +21,7 @@
             />
           </div>
           <p class="mt-4 font-mono text-sm text-muted">
-            {{ error.statusCode }}
+            {{ error.status }}
           </p>
           <h1 class="mt-2 text-5xl leading-none font-black tracking-tight text-balance text-highlighted font-round sm:text-6xl">
             {{ isNotFound ? 'this page drifted off' : 'something went wrong' }}
@@ -49,7 +49,7 @@ const { error } = defineProps<{
   error: NuxtError;
 }>();
 
-const isNotFound = computed(() => error.statusCode === 404);
+const isNotFound = computed(() => error.status === 404);
 
 useHead({
   htmlAttrs: {
