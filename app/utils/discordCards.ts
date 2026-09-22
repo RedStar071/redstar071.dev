@@ -11,15 +11,6 @@ import { hasProtocol, joinURL } from "ufo";
  * Vue VNodes, which the package rejects.
  */
 
-/** Wolf Ember red (#FD171B), the same accent the site uses. It paints the bar down the card's left edge. */
-const ACCENT_COLOR = 0xFD171B;
-
-/** Discord fits at most five buttons in a row. */
-const MAX_BUTTONS = 5;
-
-/** Keeps the card a preview rather than a page: enough rows to be useful, few enough to skim. */
-const MAX_LIST_ITEMS = 5;
-
 /** The parts of the site config and app config a card needs, resolved once by `useComponentEmbed`. */
 export interface DiscordCardSite {
   /** Absolute site origin, without a trailing slash. */
@@ -62,7 +53,7 @@ function heading(site: DiscordCardSite, title: string, url: string, description:
 }
 
 function socialButtons(site: DiscordCardSite) {
-  return site.socials.slice(0, MAX_BUTTONS).map(social => h(LinkButton, { url: social.to, label: social.label }));
+  return site.socials.slice(0, MAX_EMBED_BUTTONS).map(social => h(LinkButton, { url: social.to, label: social.label }));
 }
 
 function projectLine(site: DiscordCardSite, project: CardProject) {
@@ -82,14 +73,14 @@ function listBlock(label: string, lines: string[]) {
 export function buildProfileCard(site: DiscordCardSite, page: Pick<IndexCollectionItem, "description">, projects: CardProject[]): EmbedElement {
   return h(
     Container,
-    { accentColor: ACCENT_COLOR },
+    { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
       { accessory: avatar(site) },
       heading(site, site.name, "/", page.description),
       h(TextDisplay, null, `-# ${site.location} · @${site.username}`)
     ),
-    ...listBlock("what i've made", projects.slice(0, MAX_LIST_ITEMS).map(project => projectLine(site, project))),
+    ...listBlock("what i've made", projects.slice(0, MAX_EMBED_LIST_ITEMS).map(project => projectLine(site, project))),
     h(ActionRow, null, socialButtons(site))
   );
 }
@@ -98,13 +89,13 @@ export function buildProfileCard(site: DiscordCardSite, page: Pick<IndexCollecti
 export function buildProjectsCard(site: DiscordCardSite, page: CardPage, projects: CardProject[]): EmbedElement {
   return h(
     Container,
-    { accentColor: ACCENT_COLOR },
+    { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
       { accessory: avatar(site) },
       heading(site, page.title, page.path, page.description)
     ),
-    ...listBlock("the list", projects.slice(0, MAX_LIST_ITEMS).map(project => projectLine(site, project))),
+    ...listBlock("the list", projects.slice(0, MAX_EMBED_LIST_ITEMS).map(project => projectLine(site, project))),
     h(ActionRow, null, [
       h(LinkButton, { url: absolute(site, page.path), label: "all projects" }),
       h(LinkButton, { url: site.url, label: site.name })
@@ -116,13 +107,13 @@ export function buildProjectsCard(site: DiscordCardSite, page: CardPage, project
 export function buildWritingCard(site: DiscordCardSite, page: CardPage, posts: CardPost[]): EmbedElement {
   return h(
     Container,
-    { accentColor: ACCENT_COLOR },
+    { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
       { accessory: avatar(site) },
       heading(site, page.title, page.path, page.description)
     ),
-    ...listBlock("latest", posts.slice(0, MAX_LIST_ITEMS).map(post => postLine(site, post))),
+    ...listBlock("latest", posts.slice(0, MAX_EMBED_LIST_ITEMS).map(post => postLine(site, post))),
     h(ActionRow, null, [
       h(LinkButton, { url: absolute(site, page.path), label: "all writing" }),
       h(LinkButton, { url: absolute(site, "/rss.xml"), label: "RSS" })
@@ -136,7 +127,7 @@ export function buildPostCard(site: DiscordCardSite, post: CardPost): EmbedEleme
 
   return h(
     Container,
-    { accentColor: ACCENT_COLOR },
+    { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
       { accessory: post.image ? h(Thumbnail, { url: absolute(site, post.image), description: post.title }) : avatar(site) },

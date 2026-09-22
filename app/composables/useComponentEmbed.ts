@@ -3,9 +3,6 @@ import type { DiscordCardSite } from "~/utils/discordCards";
 import { toComponentEmbedJson } from "discord-component-embed";
 import { withoutTrailingSlash } from "ufo";
 
-/** Discord reads the card from a script carrying this exact id, and only one per page. */
-const SCRIPT_ID = "discord:component-embed";
-
 /**
  * Puts a Discord components v2 card into the page head, so a link to it shared on Discord
  * shows that card in place of the Open Graph preview.
@@ -36,7 +33,7 @@ export function useComponentEmbed(build: (site: DiscordCardSite) => EmbedElement
     } catch (error) {
       // Discord drops an invalid payload without a word and falls back to Open Graph, so the
       // build log is the only place this can show up. Keep the page rendering either way.
-      console.error(`[${SCRIPT_ID}] dropped the card for this page:`, error);
+      console.error(`[${COMPONENT_EMBED_SCRIPT_ID}] dropped the card for this page:`, error);
       return null;
     }
   });
@@ -44,7 +41,7 @@ export function useComponentEmbed(build: (site: DiscordCardSite) => EmbedElement
   useHead(() => ({
     script: json.value
       ? [{
-          id: SCRIPT_ID,
+          id: COMPONENT_EMBED_SCRIPT_ID,
           type: "application/json",
           innerHTML: json.value,
           tagPosition: "head"

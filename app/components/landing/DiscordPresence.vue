@@ -186,7 +186,7 @@ const visibility = useDocumentVisibility();
 useIntervalFn(() => {
   if (visibility.value === "visible")
     refresh();
-}, 30_000);
+}, PRESENCE_REFRESH_INTERVAL);
 
 const now = useNow({ interval: 1000 });
 
@@ -195,8 +195,8 @@ const displayName = computed(() => presence.value?.discord_user.global_name || p
 const avatarUrl = computed(() => {
   const user = presence.value?.discord_user;
   if (!user?.avatar)
-    return "https://cdn.discordapp.com/embed/avatars/0.png";
-  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=96`;
+    return DISCORD_DEFAULT_AVATAR;
+  return `${DISCORD_CDN}/avatars/${user.id}/${user.avatar}.png?size=96`;
 });
 
 const platform = computed(() => {
@@ -225,7 +225,7 @@ const activityVerbs: Record<LanyardActivity["type"], string> = {
   5: "competing in"
 };
 
-const spotifyUrl = computed(() => presence.value?.spotify?.track_id ? `https://open.spotify.com/track/${presence.value.spotify.track_id}` : "https://open.spotify.com");
+const spotifyUrl = computed(() => presence.value?.spotify?.track_id ? `${SPOTIFY_URL}/track/${presence.value.spotify.track_id}` : SPOTIFY_URL);
 const spotifyDuration = computed(() => {
   const timestamps = presence.value?.spotify?.timestamps;
   return timestamps ? timestamps.end - timestamps.start : 0;

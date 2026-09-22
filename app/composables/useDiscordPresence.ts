@@ -61,12 +61,12 @@ export function activityImage(activity: LanyardActivity) {
   if (!key)
     return null;
   if (key.startsWith("mp:"))
-    return `https://media.discordapp.net/${key.slice(3)}`;
+    return `${DISCORD_MEDIA_PROXY}/${key.slice(3)}`;
   if (key.startsWith("spotify:"))
-    return `https://i.scdn.co/image/${key.slice(8)}`;
+    return `${SPOTIFY_IMAGE_CDN}/${key.slice(8)}`;
   if (!activity.application_id)
     return null;
-  return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${key}.png`;
+  return `${DISCORD_CDN}/app-assets/${activity.application_id}/${key}.png`;
 }
 
 /**
@@ -77,7 +77,7 @@ export function activityImage(activity: LanyardActivity) {
 export function useDiscordPresence() {
   const { global } = useAppConfig();
 
-  return useLazyFetch(`https://api.lanyard.rest/v1/users/${global.discordId}`, {
+  return useLazyFetch(`${LANYARD_USERS_API}/${global.discordId}`, {
     key: "discord-presence",
     server: false,
     transform: (response: LanyardResponse) => response.data
