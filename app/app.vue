@@ -30,7 +30,8 @@ useHead({
     { key: "theme-color", name: "theme-color", content: color }
   ],
   link: [
-    { rel: "icon", href: "/favicon.ico" }
+    { rel: "icon", href: "/favicon.ico" },
+    { rel: "alternate", type: "application/rss+xml", title: global.name, href: "/rss.xml" },
   ],
   htmlAttrs: {
     lang: "en"
@@ -44,6 +45,7 @@ useSeoMeta({
 });
 
 defineOgImage("Profile");
+
 
 const [{ data: navigation }, { data: files }] = await Promise.all([
   useAsyncData("navigation", () => {

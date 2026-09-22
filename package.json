@@ -6,7 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "postinstall": "nuxt prepare && simple-git-hooks",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
@@ -31,14 +31,20 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.1.0",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@nuxt/eslint": "^1.17.0",
     "eslint": "^9.38.0",
     "eslint-plugin-package-json": "^0.59.0",
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
+    "simple-git-hooks": "^2.14.0",
     "taze": "^19.8.1",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.3.11",
     "wrangler": "^4.130.0"
   },
-  "packageManager": "pnpm@12.5.1"
+  "packageManager": "pnpm@12.5.1",
+  "simple-git-hooks": {
+    "commit-msg": "pnpm commitlint --edit $1"
+  }
 }
