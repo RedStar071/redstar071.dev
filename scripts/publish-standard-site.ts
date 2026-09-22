@@ -49,9 +49,13 @@ const basicTheme = {
   accentForeground: { $type: "site.standard.theme.color#rgb", r: 21, g: 26, b: 32 }
 };
 
+/**
+ * Throws rather than skipping, so a missing directory or a malformed post
+ * can't be read as "no posts" and prune every `site.standard.document` record.
+ */
 async function readPosts(): Promise<Post[]> {
   if (!existsSync(blogDir)) {
-    return [];
+    throw new Error(`${blogDir} does not exist`);
   }
 
   const posts: Post[] = [];
@@ -59,13 +63,11 @@ async function readPosts(): Promise<Post[]> {
     const source = await readFile(join(blogDir, file), "utf8");
     const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
     if (!match) {
-      console.warn(`skipping ${file}: no frontmatter`);
-      continue;
+      throw new Error(`${file} has no frontmatter`);
     }
     const data = parse(match[1]!) as Record<string, unknown>;
     if (typeof data.title !== "string" || data.date === undefined) {
-      console.warn(`skipping ${file}: needs a title and a date`);
-      continue;
+      throw new Error(`${file} needs a title and a date`);
     }
     posts.push({
       slug: basename(file, ".md"),
@@ -104,7 +106,7 @@ async function resolveBskyPostRef(uri: string | undefined) {
   url.searchParams.set("repo", ATPROTO_DID);
   url.searchParams.set("collection", "app.bsky.feed.post");
   url.searchParams.set("rkey", uri.slice(prefix.length));
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
   if (!response.ok) {
     console.warn(`could not read ${uri} (${response.status}), leaving bskyPostRef out`);
     return undefined;

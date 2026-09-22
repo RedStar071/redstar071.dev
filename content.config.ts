@@ -134,7 +134,9 @@ export default defineContentConfig({
         minRead: z.number(),
         date: z.date(),
         // at:// URI of the Bluesky post announcing this article; its replies show as comments
-        bluesky: z.string().startsWith("at://").optional(),
+        bluesky: z.string()
+          .regex(/^at:\/\/[^/]+\/app\.bsky\.feed\.post\/[^/]+$/, "must be a full at:// URI, e.g. at://did:plc:xyz/app.bsky.feed.post/abc123")
+          .optional(),
         image: z.string().editor({ input: "media" }).optional(),
         author: createAuthorSchema().optional()
       })

@@ -73,7 +73,11 @@ export function resolvePds(): Promise<string> {
     if (!endpoint) {
       throw new Error(`${ATPROTO_DID} has no #atproto_pds service`);
     }
-    return endpoint;
+    const url = new URL(endpoint);
+    if (url.protocol !== "https:") {
+      throw new Error(`${ATPROTO_DID} has an insecure #atproto_pds service`);
+    }
+    return url.origin;
   })();
   pdsRequest.catch(() => {
     pdsRequest = undefined;
@@ -131,15 +135,32 @@ export interface ProjectRecord {
 
 const PROJECT_STATUSES = ["active", "in development", "archived"];
 
+/** Matches `lexicons/dev/redstar071/project.json`, so a record valid here also passes PDS lexicon validation. */
+function isUri(value: unknown): value is string {
+  if (typeof value !== "string") {
+    return false;
+  }
+  try {
+    void new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function isProjectRecord(value: unknown): value is ProjectRecord {
   const project = value as Partial<ProjectRecord> | null;
   return typeof project === "object" && project !== null
-    && typeof project.title === "string" && project.title !== ""
-    && typeof project.description === "string" && project.description !== ""
-    && typeof project.role === "string" && project.role !== ""
-    && typeof project.repo === "string" && project.repo !== ""
-    && Array.isArray(project.tags) && project.tags.every(tag => typeof tag === "string")
-    && Number.isInteger(project.since)
+    && typeof project.title === "string" && project.title.length > 0 && project.title.length <= 256
+    && typeof project.description === "string" && project.description.length > 0 && project.description.length <= 2500
+    && typeof project.role === "string" && project.role.length > 0 && project.role.length <= 128
+    && (project.logo === undefined || (typeof project.logo === "string" && project.logo.length <= 512))
+    && (project.icon === undefined || (typeof project.icon === "string" && project.icon.length <= 128))
+    && (project.url === undefined || isUri(project.url))
+    && isUri(project.repo)
+    && Array.isArray(project.tags) && project.tags.length <= 16
+    && project.tags.every(tag => typeof tag === "string" && tag.length <= 64)
+    && Number.isInteger(project.since) && project.since! >= 1970
     && typeof project.status === "string" && PROJECT_STATUSES.includes(project.status)
     && typeof project.featured === "boolean"
     && Number.isInteger(project.order);

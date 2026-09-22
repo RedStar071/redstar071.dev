@@ -24,7 +24,8 @@ export async function createSession(): Promise<Session> {
   const login = await fetch(new URL("/xrpc/com.atproto.server.createSession", pds), {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ identifier: ATPROTO_HANDLE, password })
+    body: JSON.stringify({ identifier: ATPROTO_HANDLE, password }),
+    signal: AbortSignal.timeout(8000)
   });
   if (!login.ok) {
     throw new Error(`Login failed (${login.status}): ${await login.text()}`);
@@ -38,7 +39,8 @@ export async function createSession(): Promise<Session> {
     const response = await fetch(new URL(`/xrpc/${nsid}`, pds), {
       method: "POST",
       headers: { "authorization": `Bearer ${accessJwt}`, "content-type": contentType },
-      body
+      body,
+      signal: AbortSignal.timeout(8000)
     });
     if (!response.ok) {
       throw new Error(`${nsid} failed (${response.status}): ${await response.text()}`);
