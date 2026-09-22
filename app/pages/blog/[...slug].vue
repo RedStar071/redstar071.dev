@@ -88,5 +88,7 @@ useSeoMeta({
 
 defineOgImageComponent("Profile", { title, description });
 
+useComponentEmbed(site => buildPostCard(site, page.value!));
+
 const articleLink = computed(() => `${site.url}${routePath.value}`);
 </script>

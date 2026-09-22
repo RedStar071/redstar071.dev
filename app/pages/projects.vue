@@ -112,4 +112,6 @@ defineOgImageComponent("Profile", {
   title: page.value.title,
   description: page.value.description
 });
+
+useComponentEmbed(site => buildProjectsCard(site, page.value!, projects.value ?? []));
 </script>

@@ -23,6 +23,7 @@
     "@nuxt/ui": "^4.11.1",
     "@takumi-rs/core": "^2.14.0",
     "@vueuse/nuxt": "^14.4.0",
+    "discord-component-embed": "^0.2.2",
     "motion-v": "^2.4.4",
     "nuxt": "^4.5.2",
     "nuxt-og-image": "^6.8.0",

@@ -168,3 +168,4 @@ components:
 - Dark is the default mode because all three references are dark-first and the stars read best on night navy. Light mode stays fully supported.
 - The template's testimonials, FAQ, talks page, about page and sample blog posts were removed because none of them were RedStar's content.
 - Discord presence details (activity names, rich presence lines) are shown as Discord publishes them through Lanyard.
+- Links shared on Discord render a components v2 card instead of the Open Graph image: the avatar as a thumbnail, the page's own heading and description, a short list of what's on the page, and link buttons. The accent bar uses the same Wolf Ember red as the site. The Open Graph tags stay in place for every other app, and Discord falls back to them if it can't read the card.
