@@ -92,7 +92,7 @@ useSeoMeta({
 });
 
 // Points standard.site readers at this post's `site.standard.document` record,
-// which `pnpm atproto:publish` writes under the same key.
+// which the sync module (`modules/sync`) writes under the same key on deploy.
 useHead({
   link: [{
     // Unhead only types the standard `rel` values, and this one is standard.site's own.

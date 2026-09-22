@@ -9,6 +9,7 @@ trustPolicyExclude:
 allowBuilds:
   "@parcel/watcher": false
   "@tailwindcss/oxide": false
+  core-js: false
   esbuild: false
   sharp: true
   simple-git-hooks: true
