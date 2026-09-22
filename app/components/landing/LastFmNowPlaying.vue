@@ -133,6 +133,9 @@ const { data: track, refresh } = await useFetch<LastFmTrack | null>("/api/lastfm
   default: () => null
 });
 
+// "/" is prerendered, so hydration reuses the build-time payload: fetch a fresh one right away.
+onMounted(() => refresh());
+
 const visibility = useDocumentVisibility();
 useIntervalFn(() => {
   if (visibility.value === "visible")
