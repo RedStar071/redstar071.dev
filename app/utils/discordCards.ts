@@ -86,7 +86,7 @@ export function buildProfileCard(site: DiscordCardSite, page: Pick<IndexCollecti
       h(TextDisplay, null, `-# ${site.location} · @${site.username}`)
     ),
     ...listBlock("what i've made", projects.slice(0, MAX_EMBED_LIST_ITEMS).map(project => projectLine(site, project))),
-    h(ActionRow, null, socialButtons(site))
+    ...(site.socials.length ? [h(ActionRow, null, socialButtons(site))] : [])
   );
 }
 
