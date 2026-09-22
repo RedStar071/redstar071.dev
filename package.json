@@ -35,9 +35,11 @@
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
     "@nuxt/eslint": "^1.17.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.38.0",
     "eslint-plugin-package-json": "^0.59.0",
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
+    "nano-staged": "^1.0.2",
     "simple-git-hooks": "^2.14.0",
     "taze": "^19.8.1",
     "typescript": "^5.9.3",
@@ -45,7 +47,16 @@
     "wrangler": "^4.130.0"
   },
   "packageManager": "pnpm@12.5.1",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "simple-git-hooks": {
+    "pre-commit": "pnpm exec nano-staged",
     "commit-msg": "pnpm commitlint --edit $1"
+  },
+  "nano-staged": {
+    "*.{js,mjs,cjs,ts,vue,json,jsonc,yml,yaml,md}": "eslint --fix"
   }
 }
