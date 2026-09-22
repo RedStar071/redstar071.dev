@@ -11,7 +11,9 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
     "generate": "nuxt generate",
-    "deploy": "nuxt generate && wrangler deploy"
+    "deploy": "nuxt generate && wrangler deploy",
+    "atproto:publish": "node --env-file-if-exists=.env scripts/publish-standard-site.ts",
+    "atproto:projects": "node --env-file-if-exists=.env scripts/publish-projects.ts"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.134",
@@ -44,7 +46,8 @@
     "taze": "^19.8.1",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.3.11",
-    "wrangler": "^4.130.0"
+    "wrangler": "^4.130.0",
+    "yaml": "^2.9.1"
   },
   "packageManager": "pnpm@12.5.1",
   "config": {

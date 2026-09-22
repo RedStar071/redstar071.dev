@@ -1,0 +1,70 @@
+# Pages CMS (https://pagescms.org): edit content in the browser, saved as commits.
+#
+# Projects are deliberately absent. They are records in the PDS
+# (`dev.redstar071.project`) and content/projects/*.yml is only the build-time
+# fallback, so editing a YAML file here would not change the live site.
+media:
+  input: public
+  output: /
+content:
+  - name: blog
+    label: Writing
+    type: collection
+    path: content/blog
+    view:
+      fields: [title, date]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+      - name: minRead
+        label: Minutes to read
+        type: number
+        required: true
+      - name: bluesky
+        label: Bluesky post (at:// URI)
+        description: The post announcing this article. Its replies are shown as comments.
+        type: string
+      - name: image
+        label: Cover image
+        type: image
+      - name: body
+        label: Body
+        type: rich-text
+  - name: writing-page
+    label: Writing page
+    type: file
+    path: content/blog.yml
+    format: yaml
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+        required: true
+  - name: projects-page
+    label: Projects page
+    type: file
+    path: content/projects.yml
+    format: yaml
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+        required: true
