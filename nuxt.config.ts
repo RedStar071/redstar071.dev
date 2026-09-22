@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@vueuse/nuxt",
     "nuxt-og-image",
+    "nuxt-schema-org",
     "motion-v/nuxt"
   ],
 
