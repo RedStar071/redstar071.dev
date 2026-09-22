@@ -11,6 +11,7 @@ allowBuilds:
   "@tailwindcss/oxide": false
   esbuild: false
   sharp: true
+  simple-git-hooks: true
   unrs-resolver: false
   vue-demi: false
   workerd: false
