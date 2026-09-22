@@ -31,6 +31,7 @@
     "motion-v": "^2.4.4",
     "nuxt": "^4.5.2",
     "nuxt-og-image": "^6.8.0",
+    "nuxt-schema-org": "^6.3.2",
     "tailwindcss": "^4.3.3",
     "ufo": "^1.6.4"
   },
