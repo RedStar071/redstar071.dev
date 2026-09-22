@@ -4,7 +4,8 @@
  * danielroe/roe.dev's `modules/bsky-comments.ts`, run as a publish step rather
  * than during the build.
  */
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, rename, rm, writeFile } from "node:fs/promises";
+import process from "node:process";
 import { ATPROTO_DID } from "../shared/atproto.ts";
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -98,5 +99,15 @@ export async function persistAnnouncement(file: string, uri: string): Promise<vo
   const updated = /^bluesky:.*$/m.test(frontmatter[1]!)
     ? frontmatter[1]!.replace(/^bluesky:.*$/m, line)
     : `${frontmatter[1]}\n${line}`;
-  await writeFile(file, source.replace(frontmatter[0], `---\n${updated}\n---`));
+  const contents = source.replace(frontmatter[0], `---\n${updated}\n---`);
+
+  // Written through a temp file and renamed into place, so a post's
+  // frontmatter is never left half-written if the process is interrupted.
+  const tmpFile = `${file}.${process.pid}.tmp`;
+  try {
+    await writeFile(tmpFile, contents);
+    await rename(tmpFile, file);
+  } finally {
+    await rm(tmpFile, { force: true }).catch(() => {});
+  }
 }

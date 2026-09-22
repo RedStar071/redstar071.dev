@@ -121,14 +121,21 @@ async function resolveBskyPostRef(uri: string | undefined) {
 const posts = await readPosts();
 
 // A post without a `bluesky` key may have been announced since it was written.
+// A lookup failure (the public API is down, a timeout, ...) only costs that
+// post its discovery; it must not stop the publication and documents below
+// from being written.
 for (const post of posts.filter(post => !post.bluesky)) {
-  const uri = await findAnnouncement({ url: `${SITE_URL}/blog/${post.slug}`, publishedAt: new Date(post.date) });
-  if (uri) {
-    post.bluesky = uri;
-    console.info(`announcement ${uri}  /blog/${post.slug}`);
-    if (!dryRun) {
-      await persistAnnouncement(post.file, uri);
+  try {
+    const uri = await findAnnouncement({ url: `${SITE_URL}/blog/${post.slug}`, publishedAt: new Date(post.date) });
+    if (uri) {
+      post.bluesky = uri;
+      console.info(`announcement ${uri}  /blog/${post.slug}`);
+      if (!dryRun) {
+        await persistAnnouncement(post.file, uri);
+      }
     }
+  } catch (error) {
+    console.warn(`could not look up a Bluesky announcement for ${post.slug}: ${error instanceof Error ? error.message : error}`);
   }
 }
 

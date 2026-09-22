@@ -38,14 +38,16 @@ for (const id of lexicons.keys()) {
 }
 
 if (dryRun) {
+  // Set the exit code rather than calling process.exit(), which can cut off
+  // console output still pending a flush when stdout isn't a TTY (e.g. in CI).
   console.info(`\n--dry-run: ${lexicons.size} lexicon(s) found, nothing was written.`);
-  process.exit(0);
-}
+  process.exitCode = 0;
+} else {
+  const session = await createSession();
+  for (const [id, lexicon] of lexicons) {
+    await session.putRecord(SCHEMA_COLLECTION, id, { $type: SCHEMA_COLLECTION, ...lexicon });
+  }
 
-const session = await createSession();
-for (const [id, lexicon] of lexicons) {
-  await session.putRecord(SCHEMA_COLLECTION, id, { $type: SCHEMA_COLLECTION, ...lexicon });
+  console.info(`\nwrote ${lexicons.size} lexicon(s). Add the DNS record below so they resolve:`);
+  console.info(`  _lexicon.redstar071.dev  TXT  "did=${ATPROTO_DID}"`);
 }
-
-console.info(`\nwrote ${lexicons.size} lexicon(s). Add the DNS record below so they resolve:`);
-console.info(`  _lexicon.redstar071.dev  TXT  "did=${ATPROTO_DID}"`);
