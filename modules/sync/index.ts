@@ -1,5 +1,5 @@
 /**
- * Syncs the site to the AT Protocol at the end of a deploy build: the blog as
+ * Syncs the site to the AT Protocol once a deploy build has prerendered: the blog as
  * standard.site records and, once, the projects as `dev.redstar071.project`
  * records. Adapted from danielroe/roe.dev's `modules/sync`.
  *
@@ -38,21 +38,28 @@ export default defineNuxtModule({
 
     const contentDir = join(nuxt.options.rootDir, "content");
 
-    // A failed sync is logged rather than thrown: the records can catch up on
-    // the next deploy, the site itself should still ship.
-    nuxt.hook("modules:done", async () => {
-      try {
-        const [posts, projects] = await Promise.all([
-          readPosts(join(contentDir, "blog")),
-          readProjects(join(contentDir, "projects"))
-        ]);
+    // After prerendering rather than at `modules:done`, so a build that fails
+    // never touches the PDS. A failed sync is logged rather than thrown: the
+    // records can catch up on the next deploy, the site itself should still ship.
+    nuxt.hook("nitro:init", (nitro) => {
+      nitro.hooks.hook("prerender:done", async ({ failedRoutes }) => {
+        if (failedRoutes.length) {
+          logger.warn(`Skipped: ${failedRoutes.length} route(s) failed to prerender`);
+          return;
+        }
 
-        logger.info(`${dryRun ? "Dry run" : "Syncing"}: ${posts.length} post(s), ${projects.size} project(s)`);
-        await syncAll({ posts, projects }, { dryRun });
-        logger.info("Complete");
-      } catch (error) {
-        logger.warn("Failed:", error instanceof Error ? error.message : error);
-      }
+        try {
+          const posts = await readPosts(join(contentDir, "blog"));
+          logger.info(`${dryRun ? "Dry run" : "Syncing"}: ${posts.length} post(s)`);
+          await syncAll({
+            posts,
+            readProjects: () => readProjects(join(contentDir, "projects"))
+          }, { dryRun });
+          logger.info("Complete");
+        } catch (error) {
+          logger.warn("Failed:", error instanceof Error ? error.message : error);
+        }
+      });
     });
   }
 });

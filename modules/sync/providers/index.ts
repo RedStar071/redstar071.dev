@@ -19,8 +19,11 @@ export type SyncProject = RecordInput<typeof projects.schema>;
 
 export interface SyncContent {
   posts: SyncPost[];
-  /** `content/projects/*.yml`, keyed by file name. */
-  projects: Map<string, SyncProject>;
+  /**
+   * `content/projects/*.yml`, keyed by file name. Read only by a provider that
+   * needs it, so a broken seed file cannot stop the blog from syncing.
+   */
+  readProjects: () => Promise<Map<string, SyncProject>>;
 }
 
 export interface SyncOptions {

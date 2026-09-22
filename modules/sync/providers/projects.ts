@@ -15,21 +15,22 @@ const logger = useLogger("sync:projects");
 export class ProjectsProvider implements SyncProvider {
   name = "projects";
 
-  async sync({ projects }: SyncContent, { dryRun }: SyncOptions): Promise<void> {
+  async sync({ readProjects }: SyncContent, { dryRun }: SyncOptions): Promise<void> {
+    const existing = await useBuildAirspace().projects.page({ limit: 1 });
+    if (existing.records.length) {
+      logger.info("Records already in the PDS, skipping the seed from content/projects");
+      return;
+    }
+
     // Validated before anything is written, so one bad file stops the seed
     // instead of leaving half the projects in the PDS.
+    const projects = await readProjects();
     for (const [rkey, project] of projects) {
       const result = await useBuildAirspace().projects.validate(project);
       if (!result.ok) {
         const issues = result.issues.map(issue => `${issue.path}: ${issue.message}`).join("; ");
         throw new Error(`content/projects/${rkey}.yml does not match dev.redstar071.project (${issues})`);
       }
-    }
-
-    const existing = await useBuildAirspace().projects.page({ limit: 1 });
-    if (existing.records.length) {
-      logger.info("Records already in the PDS, skipping the seed from content/projects");
-      return;
     }
 
     if (dryRun) {
