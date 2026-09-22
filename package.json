@@ -11,9 +11,10 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
     "generate": "nuxt generate",
-    "deploy": "nuxt generate --sync && wrangler deploy",
+    "deploy": "nuxt build --sync && wrangler deploy",
     "lex:gen": "lex build --lexicons ./lexicons --out ./shared/lex --clear --index-file --import-ext .ts --lib @atproto/lex-schema && node scripts/_posix-imports.ts",
-    "lex:publish": "node --env-file-if-exists=.env scripts/publish-lex.ts"
+    "lex:publish": "node --env-file-if-exists=.env scripts/publish-lex.ts",
+    "spotify:token": "node --env-file-if-exists=.env scripts/spotify-token.ts"
   },
   "dependencies": {
     "@atproto/lex-schema": "^0.2.7",

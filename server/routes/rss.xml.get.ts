@@ -1,14 +1,6 @@
 import { queryCollection } from "@nuxt/content/server";
 import { joinURL } from "ufo";
 
-function escapeXml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
 /** The blog as an RSS 2.0 feed, prerendered to `/rss.xml`. */
 export default defineEventHandler(async (event) => {
   const site = getSiteConfig(event);

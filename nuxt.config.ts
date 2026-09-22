@@ -38,8 +38,14 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Kept server-side: the browser only ever calls our small /api/lastfm proxy.
     lastfmApiKey: "",
+    // For the README cards under /readme/*, set as Worker secrets (see .env.example).
+    githubToken: "",
+    spotifyClientId: "",
+    spotifyClientSecret: "",
+    spotifyRefreshToken: "",
     public: {
-      lastfmUsername: "redstar071"
+      lastfmUsername: "redstar071",
+      githubUsername: "RedStar071"
     }
   },
 
@@ -50,10 +56,19 @@ export default defineNuxtConfig({
   compatibilityDate: "2026-06-30",
 
   nitro: {
+    // Every page is still prerendered and served as a static asset; the Worker only
+    // answers what has to be live: /api/lastfm and the README cards under /readme/*.
+    preset: "cloudflare-module",
     prerender: {
       routes: [
         "/",
-        "/rss.xml"
+        "/rss.xml",
+        "/readme.md",
+        "/readme/stack.svg",
+        // Written by `nuxt generate` on its own; a server build has to ask. 404.html is the
+        // page Cloudflare serves for an unknown path (`not_found_handling` in wrangler.jsonc).
+        "/200.html",
+        "/404.html"
       ],
       crawlLinks: true
     }
