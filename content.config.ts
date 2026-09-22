@@ -1,10 +1,11 @@
-import type { ProjectRecord } from "./shared/atproto";
+import type { RecordOf } from "airspace";
+import type { projects as projectCollection } from "./shared/collections";
 import { readdir, readFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineCollection, defineCollectionSource, defineContentConfig, z } from "@nuxt/content";
 import { parse } from "yaml";
-import { COLLECTIONS, isProjectRecord, listRecords } from "./shared/atproto";
+import { useBuildAirspace } from "./modules/shared/airspace";
 
 function createBaseSchema() {
   return z.object({
@@ -32,6 +33,8 @@ function createAuthorSchema() {
   });
 }
 
+type ProjectRecord = Omit<RecordOf<typeof projectCollection>["value"], "$type">;
+
 const projectsDir = fileURLToPath(new URL("./content/projects", import.meta.url));
 
 /** The `content/projects/*.yml` files, used when the PDS has no readable projects. */
@@ -44,22 +47,19 @@ async function readProjectFiles(): Promise<Map<string, ProjectRecord>> {
 }
 
 /**
- * Projects are `dev.redstar071.project` records in the PDS. Any failure to read
- * them (offline, PDS down, nothing published yet) falls back to the YAML files,
- * so a build never depends on the network being up.
+ * Projects are `dev.redstar071.project` records in the PDS, read through
+ * airspace, which validates each one against `lexicons.ts` and skips any that
+ * fail. Any failure to read them (offline, PDS down, nothing published yet)
+ * falls back to the YAML files, so a build never depends on the network being up.
  */
 let projectsRequest: Promise<Map<string, ProjectRecord>> | undefined;
 function loadProjects() {
   projectsRequest ??= (async () => {
     try {
-      const records = await listRecords(COLLECTIONS.project);
+      const records = await useBuildAirspace().projects.list();
       const projects = new Map<string, ProjectRecord>();
-      for (const record of records) {
-        if (isProjectRecord(record.value)) {
-          projects.set(record.rkey, record.value);
-        } else {
-          console.warn(`[projects] ignoring ${record.uri}: it does not match the project shape`);
-        }
+      for (const { rkey, value: { $type, ...project } } of records) {
+        projects.set(rkey, project);
       }
       if (projects.size > 0) {
         return projects;

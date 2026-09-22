@@ -1,12 +1,12 @@
 /**
  * Finds the Bluesky post that announced an article, so its replies can be shown
  * as comments without pasting the URI by hand. Adapted from the discovery in
- * danielroe/roe.dev's `modules/bsky-comments.ts`, run as a publish step rather
- * than during the build.
+ * danielroe/roe.dev's `modules/bsky-comments.ts`, run by the standard.site sync
+ * provider before it writes the documents.
  */
 import { readFile, rename, rm, writeFile } from "node:fs/promises";
 import process from "node:process";
-import { ATPROTO_DID } from "../shared/atproto.ts";
+import { ATPROTO_DID } from "../../shared/atproto";
 
 const DAY = 24 * 60 * 60 * 1000;
 
