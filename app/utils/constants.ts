@@ -36,3 +36,16 @@ export const SPOTIFY_IMAGE_CDN = "https://i.scdn.co/image";
 
 /** Spotify on the web, for when a track has no id to link to. */
 export const SPOTIFY_URL = "https://open.spotify.com";
+
+/** Gramophone, an alternative Last.fm frontend, where the listening card sends every link. @see https://gramophone.bignut.zip */
+export const GRAMOPHONE_URL = "https://gramophone.bignut.zip";
+
+/** How often the listening card refetches while the tab is visible. Last.fm updates a scrobble about this fast. */
+export const LISTENING_REFRESH_INTERVAL = 60_000;
+
+/** Three bars, out of phase, so a playing track reads as a level meter rather than a blink. */
+export const EQUALIZER_BARS = [
+  { height: "60%", delay: "0s" },
+  { height: "100%", delay: "0.18s" },
+  { height: "45%", delay: "0.36s" }
+];
