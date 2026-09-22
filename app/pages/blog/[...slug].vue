@@ -69,7 +69,7 @@ const site = useSiteConfig();
 
 const { data: page } = await useAsyncData(routePath.value, () => queryCollection("blog").path(routePath.value).first());
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
+  throw createError({ status: 404, statusText: "Page not found", fatal: true });
 }
 
 const { data: surround } = await useAsyncData(`${routePath.value}-surround`, () => queryCollectionItemSurroundings("blog", routePath.value, {
@@ -86,7 +86,7 @@ useSeoMeta({
   ogDescription: description
 });
 
-defineOgImageComponent("Profile", { title, description });
+defineOgImage("Profile", { title, description });
 
 const articleLink = computed(() => `${site.url}${routePath.value}`);
 </script>

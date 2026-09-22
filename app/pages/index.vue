@@ -149,7 +149,7 @@
 <script setup lang="ts">
 const { data: page } = await useAsyncData("index", () => queryCollection("index").first());
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
+  throw createError({ status: 404, statusText: "Page not found", fatal: true });
 }
 
 const [{ data: projects }, { data: posts }] = await Promise.all([
@@ -169,7 +169,7 @@ useSeoMeta({
   ogDescription: page.value.seo.description || page.value.description
 });
 
-defineOgImageComponent("Profile", {
+defineOgImage("Profile", {
   title: page.value.title,
   description: page.value.description
 });

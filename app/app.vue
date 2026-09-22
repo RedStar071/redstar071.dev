@@ -43,7 +43,7 @@ useSeoMeta({
   twitterCreator: "@redstar071"
 });
 
-defineOgImageComponent("Profile");
+defineOgImage("Profile");
 
 const [{ data: navigation }, { data: files }] = await Promise.all([
   useAsyncData("navigation", () => {
