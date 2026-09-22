@@ -23,6 +23,21 @@ export default defineAppConfig({
     icon: "i-simple-icons-x",
     to: "https://x.com/redstar071"
   }, {
+    label: "Bluesky",
+    handle: "redstar071.dev",
+    icon: "i-simple-icons-bluesky",
+    to: "https://bsky.app/profile/redstar071.dev"
+  }, {
+    label: "Telegram",
+    handle: "redstar071",
+    icon: "i-simple-icons-telegram",
+    to: "https://t.me/redstar071"
+  }, {
+    label: "Instagram",
+    handle: "redstar071",
+    icon: "i-simple-icons-instagram",
+    to: "https://instagram.com/redstar071"
+  }, {
     label: "GitHub Sponsors",
     handle: "sponsor my work",
     icon: "i-simple-icons-githubsponsors",

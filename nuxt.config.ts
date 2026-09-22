@@ -35,12 +35,17 @@ export default defineNuxtConfig({
     }
   },
 
+  future: {
+    compatibilityVersion: 5
+  },
+
   compatibilityDate: "2026-06-30",
 
   nitro: {
     prerender: {
       routes: [
-        "/"
+        "/",
+        "/rss.xml"
       ],
       crawlLinks: true
     }

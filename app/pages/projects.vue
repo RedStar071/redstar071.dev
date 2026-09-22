@@ -96,7 +96,7 @@
 <script setup lang="ts">
 const { data: page } = await useAsyncData("projects-page", () => queryCollection("pages").path("/projects").first());
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
+  throw createError({ status: 404, statusText: "Page not found", fatal: true });
 }
 
 const { data: projects } = await useAsyncData("projects", () => queryCollection("projects").order("order", "ASC").all());
@@ -108,8 +108,10 @@ useSeoMeta({
   ogDescription: page.value.description
 });
 
-defineOgImageComponent("Profile", {
+defineOgImage("Profile", {
   title: page.value.title,
   description: page.value.description
 });
+
+useComponentEmbed(site => buildProjectsCard(site, page.value!, projects.value ?? []));
 </script>
