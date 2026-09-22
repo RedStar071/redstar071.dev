@@ -44,22 +44,27 @@ function summarize(text: string, max = 72) {
   return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[,;:]$/, "")}…`;
 }
 
+/** Builds the thumbnail used to identify the site owner across cards. */
 function avatar(site: DiscordCardSite) {
   return h(Thumbnail, { url: site.avatar, description: `${site.name}'s avatar` });
 }
 
+/** Builds a linked card title followed by its description. */
 function heading(site: DiscordCardSite, title: string, url: string, description: string) {
   return h(TextDisplay, null, `# [${title}](${absolute(site, url)})\n${description}`);
 }
 
+/** Builds up to Discord's maximum number of social link buttons. */
 function socialButtons(site: DiscordCardSite) {
   return site.socials.slice(0, MAX_EMBED_BUTTONS).map(social => h(LinkButton, { url: social.to, label: social.label }));
 }
 
+/** Formats a project as a linked, summarized markdown list row. */
 function projectLine(site: DiscordCardSite, project: CardProject) {
   return `- [${project.title}](${absolute(site, project.url ?? project.repo)}) — ${summarize(project.description)}`;
 }
 
+/** Formats a post as a linked markdown list row with its publication date. */
 function postLine(site: DiscordCardSite, post: CardPost) {
   return `- [${post.title}](${absolute(site, post.path)}) — ${formatDate(post.date)}`;
 }
