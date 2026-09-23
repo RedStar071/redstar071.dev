@@ -8,69 +8,71 @@
     <div aria-live="polite">
       <div
         v-if="track"
-        class="relative overflow-hidden rounded-lg bg-primary-100 p-4 dark:bg-primary-950"
+        class="group/track relative isolate flex min-h-56 flex-col justify-between overflow-hidden rounded-lg p-4 sm:min-h-64"
+        :class="hasCover ? 'bg-primary-950' : 'bg-primary-100 dark:bg-primary-950'"
       >
+        <img
+          v-if="hasCover"
+          :src="track.image!"
+          alt=""
+          aria-hidden="true"
+          class="absolute inset-0 -z-20 size-full scale-105 object-cover transition-transform duration-700 ease-(--ease-spatial) group-hover/track:scale-110"
+        />
         <UIcon
+          v-else
           name="i-material-symbols-album-rounded"
           aria-hidden="true"
-          class="absolute -right-8 -bottom-10 size-40 text-primary-200 dark:text-primary-900"
+          class="absolute -right-8 -bottom-10 -z-20 size-40 text-primary-200 dark:text-primary-900"
           :class="{ 'motion-safe:animate-spin-slow': track.isNowPlaying }"
         />
+        <div
+          v-if="hasCover"
+          class="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/30 to-black/10"
+        ></div>
 
-        <div class="relative flex items-start gap-4">
-          <img
-            v-if="track.image"
-            :src="track.image"
-            :alt="`${track.album || track.title} cover`"
-            width="64"
-            height="64"
-            class="size-16 shrink-0 rounded-md bg-primary-200 object-cover dark:bg-primary-900"
-          />
-          <div
-            v-else
-            class="flex size-16 shrink-0 items-center justify-center rounded-md bg-primary-200 text-primary-700 dark:bg-primary-900 dark:text-primary-300"
+        <p
+          class="relative flex items-center gap-1.5 font-mono text-xs"
+          :class="hasCover ? 'text-white/80' : 'text-primary-700 dark:text-primary-300'"
+        >
+          <span
+            v-if="track.isNowPlaying"
+            aria-hidden="true"
+            class="flex h-3 items-end gap-0.5"
           >
-            <UIcon
-              name="i-material-symbols-album-rounded"
-              class="size-8"
-            />
-          </div>
+            <span
+              v-for="(bar, index) in EQUALIZER_BARS"
+              :key="index"
+              class="w-0.5 origin-bottom rounded-full bg-current motion-safe:animate-equalize"
+              :style="{ 'height': bar.height, '--delay': bar.delay }"
+            ></span>
+          </span>
+          <UIcon
+            v-else
+            name="i-simple-icons-lastdotfm"
+            class="size-3.5"
+          />
+          {{ track.isNowPlaying ? "listening now" : "last scrobble" }}
+          <ClientOnly v-if="!track.isNowPlaying && track.playedAt">
+            <span>· {{ playedAgo }}</span>
+          </ClientOnly>
+        </p>
 
+        <div class="relative flex items-end gap-4">
           <div class="min-w-0 flex-1">
-            <p class="flex items-center gap-1.5 font-mono text-xs text-primary-700 dark:text-primary-300">
-              <span
-                v-if="track.isNowPlaying"
-                aria-hidden="true"
-                class="flex h-3 items-end gap-0.5"
-              >
-                <span
-                  v-for="(bar, index) in EQUALIZER_BARS"
-                  :key="index"
-                  class="w-0.5 origin-bottom rounded-full bg-current motion-safe:animate-equalize"
-                  :style="{ 'height': bar.height, '--delay': bar.delay }"
-                ></span>
-              </span>
-              <UIcon
-                v-else
-                name="i-simple-icons-lastdotfm"
-                class="size-3.5"
-              />
-              {{ track.isNowPlaying ? "listening now" : "last scrobble" }}
-              <ClientOnly v-if="!track.isNowPlaying && track.playedAt">
-                <span>· {{ playedAgo }}</span>
-              </ClientOnly>
-            </p>
-
             <ULink
               :to="trackUrl"
               target="_blank"
               raw
-              class="mt-1 block truncate text-xl font-bold text-primary-800 hover:underline dark:text-primary-200"
+              class="block truncate text-2xl font-bold hover:underline"
+              :class="hasCover ? 'text-white' : 'text-primary-800 dark:text-primary-200'"
             >
               {{ track.title }}
             </ULink>
 
-            <p class="truncate text-sm text-toned">
+            <p
+              class="truncate text-sm"
+              :class="hasCover ? 'text-white/70' : 'text-toned'"
+            >
               <ULink
                 :to="artistUrl"
                 target="_blank"
@@ -86,7 +88,8 @@
             :to="track.url"
             target="_blank"
             raw
-            class="shrink-0 text-primary-700 opacity-60 transition-opacity hover:opacity-100 dark:text-primary-300"
+            class="shrink-0 opacity-70 transition-opacity hover:opacity-100"
+            :class="hasCover ? 'text-white' : 'text-primary-700 dark:text-primary-300'"
           >
             <UIcon
               name="i-simple-icons-lastdotfm"
@@ -159,6 +162,7 @@ useIntervalFn(() => {
 }, LISTENING_REFRESH_INTERVAL);
 
 const playedAgo = useTimeAgo(computed(() => track.value?.playedAt ?? Date.now()));
+const hasCover = computed(() => !!track.value?.image);
 
 // Links go to Gramophone, an alternative Last.fm frontend; the small logo keeps the credit on Last.fm.
 const profileUrl = computed(() => `${GRAMOPHONE_URL}/profile/${encodeURIComponent(config.public.lastfmUsername)}`);
