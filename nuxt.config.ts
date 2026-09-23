@@ -35,6 +35,13 @@ export default defineNuxtConfig({
       sqliteConnector: "native"
     }
   },
+  runtimeConfig: {
+    // Kept server-side: the browser only ever calls our small /api/lastfm proxy.
+    lastfmApiKey: "",
+    public: {
+      lastfmUsername: "redstar071"
+    }
+  },
 
   future: {
     compatibilityVersion: 5

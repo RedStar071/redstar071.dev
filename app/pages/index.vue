@@ -92,6 +92,8 @@
           >
             <LandingDiscordPresence />
           </BentoCard>
+
+          <LandingLastFmNowPlaying :title="page.listening.title" />
         </div>
       </div>
 
@@ -99,7 +101,7 @@
         :title="page.stack.title"
         icon="i-material-symbols-construction-rounded"
         shape="clover"
-        class="[--i:10]"
+        class="[--i:11]"
       >
         <ul class="grid grid-cols-2 gap-0.5 overflow-hidden rounded-lg sm:grid-cols-5 lg:grid-cols-10">
           <li
@@ -121,7 +123,7 @@
         :title="page.writing.title"
         icon="i-material-symbols-ink-pen-outline-rounded"
         shape="star"
-        class="[--i:11]"
+        class="[--i:12]"
       >
         <ul class="flex flex-col gap-0.5 overflow-hidden rounded-lg">
           <LinkRow

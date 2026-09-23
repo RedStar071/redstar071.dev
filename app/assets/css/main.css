@@ -28,6 +28,7 @@
   --animate-twinkle: twinkle 4.8s ease-in-out var(--delay, 0s) infinite;
   --animate-drift: drift 36s linear infinite;
   --animate-spin-slow: spin 24s linear infinite;
+  --animate-equalize: equalize 1.1s var(--ease-effects) var(--delay, 0s) infinite;
 
   @keyframes rise {
     from {
@@ -54,6 +55,15 @@
   @keyframes drift {
     to {
       transform: translateX(-720px);
+    }
+  }
+
+  @keyframes equalize {
+    0%, 100% {
+      transform: scaleY(0.35);
+    }
+    50% {
+      transform: scaleY(1);
     }
   }
 }

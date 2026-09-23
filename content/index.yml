@@ -19,6 +19,8 @@ projects:
   title: "what i've made"
 presence:
   title: on discord right now
+listening:
+  title: what i'm listening to
 stack:
   title: what i use
   items:

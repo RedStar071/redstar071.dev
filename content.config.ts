@@ -100,6 +100,7 @@ export default defineContentConfig({
         socials: createCardSchema(),
         projects: createCardSchema(),
         presence: createCardSchema(),
+        listening: createCardSchema(),
         stack: createCardSchema().extend({
           items: z.array(z.object({
             label: z.string().nonempty(),
