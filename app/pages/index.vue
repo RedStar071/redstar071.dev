@@ -2,9 +2,9 @@
   <div v-if="page">
     <LandingProfileHero :page />
 
-    <UContainer class="mt-16 flex flex-col gap-4 sm:mt-20">
-      <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
-        <div class="flex min-w-0 flex-col gap-4">
+    <UContainer class="mt-16 flex flex-col gap-6 sm:mt-20 sm:gap-8">
+      <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+        <div class="flex min-w-0 flex-col gap-6">
           <BentoCard
             :title="page.about.title"
             icon="i-material-symbols-waving-hand-outline-rounded"
@@ -54,7 +54,7 @@
           </BentoCard>
         </div>
 
-        <div class="flex min-w-0 flex-col gap-4">
+        <div class="flex min-w-0 flex-col gap-6">
           <BentoCard
             :title="page.projects.title"
             icon="i-material-symbols-deployed-code-outline-rounded"
