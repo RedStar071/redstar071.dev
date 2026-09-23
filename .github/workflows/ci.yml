@@ -84,5 +84,5 @@ jobs:
         run: pnpm install
 
       # Same output `pnpm run deploy` uploads to Cloudflare.
-      - name: 🏗️ Generate static site
-        run: pnpm run generate
+      - name: 🏗️ Build site and Worker
+        run: pnpm run build
