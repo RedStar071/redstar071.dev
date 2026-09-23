@@ -1,99 +1,118 @@
 <template>
   <BentoCard
-    v-if="track"
     :title
     icon="i-material-symbols-graphic-eq-rounded"
     shape="sunny"
     class="[--i:10]"
   >
-    <div
-      aria-live="polite"
-      class="relative overflow-hidden rounded-lg bg-primary-100 p-4 dark:bg-primary-950"
-    >
-      <UIcon
-        name="i-material-symbols-album-rounded"
-        aria-hidden="true"
-        class="absolute -right-8 -bottom-10 size-40 text-primary-200 dark:text-primary-900"
-        :class="{ 'motion-safe:animate-spin-slow': track.isNowPlaying }"
-      />
-
-      <div class="relative flex items-start gap-4">
-        <img
-          v-if="track.image"
-          :src="track.image"
-          :alt="`${track.album || track.title} cover`"
-          width="64"
-          height="64"
-          class="size-16 shrink-0 rounded-md bg-primary-200 object-cover dark:bg-primary-900"
+    <div aria-live="polite">
+      <div
+        v-if="track"
+        class="relative overflow-hidden rounded-lg bg-primary-100 p-4 dark:bg-primary-950"
+      >
+        <UIcon
+          name="i-material-symbols-album-rounded"
+          aria-hidden="true"
+          class="absolute -right-8 -bottom-10 size-40 text-primary-200 dark:text-primary-900"
+          :class="{ 'motion-safe:animate-spin-slow': track.isNowPlaying }"
         />
-        <div
-          v-else
-          class="flex size-16 shrink-0 items-center justify-center rounded-md bg-primary-200 text-primary-700 dark:bg-primary-900 dark:text-primary-300"
-        >
-          <UIcon
-            name="i-material-symbols-album-rounded"
-            class="size-8"
+
+        <div class="relative flex items-start gap-4">
+          <img
+            v-if="track.image"
+            :src="track.image"
+            :alt="`${track.album || track.title} cover`"
+            width="64"
+            height="64"
+            class="size-16 shrink-0 rounded-md bg-primary-200 object-cover dark:bg-primary-900"
           />
-        </div>
-
-        <div class="min-w-0 flex-1">
-          <p class="flex items-center gap-1.5 font-mono text-xs text-primary-700 dark:text-primary-300">
-            <span
-              v-if="track.isNowPlaying"
-              aria-hidden="true"
-              class="flex h-3 items-end gap-0.5"
-            >
-              <span
-                v-for="(bar, index) in EQUALIZER_BARS"
-                :key="index"
-                class="w-0.5 origin-bottom rounded-full bg-current motion-safe:animate-equalize"
-                :style="{ 'height': bar.height, '--delay': bar.delay }"
-              ></span>
-            </span>
-            <UIcon
-              v-else
-              name="i-simple-icons-lastdotfm"
-              class="size-3.5"
-            />
-            {{ track.isNowPlaying ? "listening now" : "last scrobble" }}
-            <ClientOnly v-if="!track.isNowPlaying && track.playedAt">
-              <span>· {{ playedAgo }}</span>
-            </ClientOnly>
-          </p>
-
-          <ULink
-            :to="trackUrl"
-            target="_blank"
-            raw
-            class="mt-1 block truncate text-xl font-bold text-primary-800 hover:underline dark:text-primary-200"
+          <div
+            v-else
+            class="flex size-16 shrink-0 items-center justify-center rounded-md bg-primary-200 text-primary-700 dark:bg-primary-900 dark:text-primary-300"
           >
-            {{ track.title }}
-          </ULink>
+            <UIcon
+              name="i-material-symbols-album-rounded"
+              class="size-8"
+            />
+          </div>
 
-          <p class="truncate text-sm text-toned">
+          <div class="min-w-0 flex-1">
+            <p class="flex items-center gap-1.5 font-mono text-xs text-primary-700 dark:text-primary-300">
+              <span
+                v-if="track.isNowPlaying"
+                aria-hidden="true"
+                class="flex h-3 items-end gap-0.5"
+              >
+                <span
+                  v-for="(bar, index) in EQUALIZER_BARS"
+                  :key="index"
+                  class="w-0.5 origin-bottom rounded-full bg-current motion-safe:animate-equalize"
+                  :style="{ 'height': bar.height, '--delay': bar.delay }"
+                ></span>
+              </span>
+              <UIcon
+                v-else
+                name="i-simple-icons-lastdotfm"
+                class="size-3.5"
+              />
+              {{ track.isNowPlaying ? "listening now" : "last scrobble" }}
+              <ClientOnly v-if="!track.isNowPlaying && track.playedAt">
+                <span>· {{ playedAgo }}</span>
+              </ClientOnly>
+            </p>
+
             <ULink
-              :to="artistUrl"
+              :to="trackUrl"
               target="_blank"
               raw
-              class="hover:underline"
+              class="mt-1 block truncate text-xl font-bold text-primary-800 hover:underline dark:text-primary-200"
             >
-              {{ track.artist }}
-            </ULink><template v-if="track.album"> · {{ track.album }}</template>
-          </p>
-        </div>
+              {{ track.title }}
+            </ULink>
 
-        <ULink
-          :to="track.url"
-          target="_blank"
-          raw
-          class="shrink-0 text-primary-700 opacity-60 transition-opacity hover:opacity-100 dark:text-primary-300"
-        >
-          <UIcon
-            name="i-simple-icons-lastdotfm"
-            class="size-4"
-          />
-          <span class="sr-only">powered by Last.fm (opens in a new tab)</span>
-        </ULink>
+            <p class="truncate text-sm text-toned">
+              <ULink
+                :to="artistUrl"
+                target="_blank"
+                raw
+                class="hover:underline"
+              >
+                {{ track.artist }}
+              </ULink><template v-if="track.album"> · {{ track.album }}</template>
+            </p>
+          </div>
+
+          <ULink
+            :to="track.url"
+            target="_blank"
+            raw
+            class="shrink-0 text-primary-700 opacity-60 transition-opacity hover:opacity-100 dark:text-primary-300"
+          >
+            <UIcon
+              name="i-simple-icons-lastdotfm"
+              class="size-4"
+            />
+            <span class="sr-only">powered by Last.fm (opens in a new tab)</span>
+          </ULink>
+        </div>
+      </div>
+
+      <div
+        v-else
+        class="flex flex-col items-start gap-3 rounded-lg bg-elevated p-4"
+      >
+        <p class="text-toned">
+          {{ status === "pending" ? "checking Last.fm for a scrobble…" : "nothing scrobbled recently, so i can't tell you what i'm listening to." }}
+        </p>
+        <UButton
+          label="try again"
+          icon="i-material-symbols-refresh-rounded"
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          :loading="status === 'pending'"
+          @click="refresh()"
+        />
       </div>
     </div>
 
@@ -124,11 +143,8 @@ defineProps<{ title: string }>();
 
 const config = useRuntimeConfig();
 
-/**
- * Awaited so the server already knows whether there is a scrobble to show: with nothing
- * to say the card never reaches the page, rather than popping in after hydration.
- */
-const { data: track, refresh } = await useFetch<LastFmTrack | null>("/api/lastfm", {
+// Awaited so the server-rendered markup already has a track (or the empty state) at first paint.
+const { data: track, status, refresh } = await useFetch<LastFmTrack | null>("/api/lastfm", {
   key: "lastfm-now-playing",
   default: () => null
 });
