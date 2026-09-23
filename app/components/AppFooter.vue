@@ -1,5 +1,5 @@
 <template>
-  <footer class="mt-4 pb-6">
+  <footer class="mt-16 pb-6 sm:mt-20">
     <UContainer>
       <div class="rounded-2xl bg-muted p-5 sm:p-8">
         <ul class="flex flex-wrap gap-2">
