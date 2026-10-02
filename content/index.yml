@@ -9,10 +9,12 @@ hero:
 about:
   title: a bit about me
   items:
-    - "i look after WolfStar, a Discord moderation bot, and its dashboard"
-    - "i write TypeScript, Vue and Nuxt, mostly in the open"
-    - "i make frameworks, plugins and UI kits for other devs"
+    - "i'm RedStar, Red to my friends, and i'm 21"
     - "i'm based in Italy"
+    - "i'm hooked on programming (mostly Vue, TypeScript, JavaScript and CSS) and on tech in general"
+    - "i look after WolfStar, a Discord moderation bot, and its dashboard"
+    - "i make frameworks, plugins and UI kits for other devs"
+    - "i love video games: Minecraft (my childhood), Titanfall 2 and Call of Duty: Black Ops 3/2/1 Zombies"
 socials:
   title: where to find me
 projects:
