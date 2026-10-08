@@ -1,8 +1,8 @@
+import { SPOTIFY_USER_ID } from "#shared/utils/spotify";
 import { queryCollection } from "@nuxt/content/server";
 import { joinURL } from "ufo";
 
 const GITHUB_AVATAR_ID = "76824516";
-const SPOTIFY_USER_ID = "d7idltb8rrr4oqk3izjefxd1d";
 
 /** `icon-marquee.giann.dev` slugs for the stack labels in `content/index.yml`. */
 const STACK_SLUGS: Record<string, string> = {
@@ -74,7 +74,7 @@ export default defineEventHandler(async (event) => {
     `## ${page.listening.title}`,
     "",
     `<a href="https://open.spotify.com/user/${SPOTIFY_USER_ID}">`,
-    `  <img src="https://spotify-recently-played-readme.vercel.app/api?user=${SPOTIFY_USER_ID}&count=5&unique=true" alt="Spotify recently played" />`,
+    `  <img src="https://spotify-recently-played.jeffreyca.workers.dev/svg?user=${SPOTIFY_USER_ID}&count=5&unique=true" alt="Spotify recently played" />`,
     `</a>`,
     "",
     `## ${page.projects.title}`,

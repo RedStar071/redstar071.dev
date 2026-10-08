@@ -40,6 +40,10 @@ export default defineNuxtConfig({
     lastfmApiKey: "",
     // For the README cards under /readme/*, set as Worker secrets (see .env.example).
     githubToken: "",
+    // For the recently played list on the home page, set as Worker secrets (see .env.example).
+    spotifyClientId: "",
+    spotifyClientSecret: "",
+    spotifyRefreshToken: "",
     public: {
       lastfmUsername: "redstar071",
       githubUsername: "RedStar071"

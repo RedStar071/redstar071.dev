@@ -94,6 +94,8 @@
           </BentoCard>
 
           <LandingLastFmNowPlaying :title="page.listening.title" />
+
+          <LandingSpotifyRecent :title="page.recent.title" />
         </div>
       </div>
 

@@ -57,7 +57,7 @@ Nitro also writes the README for [github.com/RedStar071](https://github.com/RedS
 Every card follows the reader's light or dark theme; add `?theme=dark` or `?theme=light` to pin one.
 Copy `/readme.md` into the `RedStar071/RedStar071` repository: the stats cards update themselves, so it only needs copying again when the bio or the projects change.
 
-The pages are still prerendered and served as static assets; the Worker built by Nitro's `cloudflare-module` preset only runs `/api/*` and `/readme/*`. Set the secrets on it with `wrangler secret put <NAME>` (see `.env.example`).
+The pages are still prerendered and served as static assets; the Worker built by Nitro's `cloudflare-module` preset only runs `/api/*` and `/readme/*`. Set the secrets on it with `wrangler secret put <NAME>` (see `.env.example`), and get a Spotify refresh token with `pnpm spotify:token`. Spotify expires it after six months, and the recently played card stays empty until you run it again.
 
 ## License
 
