@@ -3,7 +3,7 @@
     :title
     icon="i-simple-icons-spotify"
     shape="sunny"
-    class="[--i:11]"
+    class="[--i:10]"
   >
     <ul
       v-if="tracks.length"
