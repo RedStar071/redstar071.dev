@@ -155,7 +155,8 @@ export async function fetchSpotifyRecent(event: H3Event, limit = 5): Promise<Spo
   try {
     // 204 with no body when nothing is playing; a podcast episode has no track to show.
     const [current, recent] = await Promise.all([
-      $fetch<SpotifyCurrentlyPlaying | undefined>("https://api.spotify.com/v1/me/player/currently-playing", { headers, timeout: MUSIC_TIMEOUT }),
+      // The now-playing lookup is optional: if it fails, the history below still shows.
+      $fetch<SpotifyCurrentlyPlaying | undefined>("https://api.spotify.com/v1/me/player/currently-playing", { headers, timeout: MUSIC_TIMEOUT }).catch(() => undefined),
       $fetch<SpotifyRecentlyPlayed>("https://api.spotify.com/v1/me/player/recently-played", { headers, query: { limit }, timeout: MUSIC_TIMEOUT })
     ]);
 
