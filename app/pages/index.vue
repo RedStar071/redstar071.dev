@@ -92,9 +92,13 @@
           >
             <LandingDiscordPresence />
           </BentoCard>
-
-          <LandingLastFmNowPlaying :title="page.listening.title" />
         </div>
+      </div>
+
+      <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+        <LandingLastFmNowPlaying :title="page.listening.title" />
+
+        <LandingSpotifyRecent :title="page.recent.title" />
       </div>
 
       <BentoCard

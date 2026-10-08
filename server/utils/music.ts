@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
 
-/** One track, whichever service it came from. */
+/** One track, as Last.fm reports it. */
 export interface Track {
   title: string;
   artist: string;
@@ -9,7 +9,7 @@ export interface Track {
   url: string;
   isNowPlaying: boolean;
   playedAt: number | null;
-  source: "spotify" | "lastfm";
+  source: "lastfm";
 }
 
 interface LastFmApiTrack {
@@ -27,24 +27,7 @@ interface LastFmApiResponse {
   error?: number;
 }
 
-interface SpotifyApiTrack {
-  name: string;
-  external_urls: { spotify: string };
-  artists: Array<{ name: string }>;
-  album: { name: string; images: Array<{ url: string; width: number | null }> };
-}
-
-interface SpotifyCurrentlyPlaying {
-  is_playing: boolean;
-  currently_playing_type: string;
-  item: SpotifyApiTrack | null;
-}
-
-interface SpotifyRecentlyPlayed {
-  items: Array<{ track: SpotifyApiTrack; played_at: string }>;
-}
-
-/** Past this, Spotify and Last.fm are down as far as a card is concerned. */
+/** Past this, Last.fm is down as far as the widget is concerned. */
 const MUSIC_TIMEOUT = 3_000;
 
 /** The latest scrobble on Last.fm, or null with no key, no scrobble or Last.fm down. */
@@ -88,10 +71,38 @@ export async function fetchLastFmTrack(event: H3Event): Promise<Track | null> {
   }
 }
 
+interface SpotifyApiTrack {
+  name: string;
+  external_urls: { spotify: string };
+  artists: Array<{ name: string }>;
+  album: { name: string; images: Array<{ url: string; width: number | null }> };
+}
+
+interface SpotifyCurrentlyPlaying {
+  is_playing: boolean;
+  currently_playing_type: string;
+  item: SpotifyApiTrack | null;
+}
+
+interface SpotifyRecentlyPlayed {
+  items: Array<{ track: SpotifyApiTrack; played_at: string }>;
+}
+
+/** One entry of the recently played list. */
+export interface SpotifyTrack {
+  title: string;
+  artist: string;
+  album: string | null;
+  image: string | null;
+  url: string;
+  isNowPlaying: boolean;
+  playedAt: number | null;
+}
+
 /**
  * An access token from the refresh token, cached for a little less than the hour Spotify gives it.
  * Spotify expires a refresh token six months after it was granted: from then on this returns null
- * and the cards fall back to Last.fm until `pnpm spotify:token` issues a new one.
+ * until `pnpm spotify:token` issues a new one.
  */
 const getSpotifyAccessToken = defineCachedFunction(async (event: H3Event): Promise<string | null> => {
   const config = useRuntimeConfig(event);
@@ -120,9 +131,9 @@ const getSpotifyAccessToken = defineCachedFunction(async (event: H3Event): Promi
   validate: entry => !!entry.value
 });
 
-function toSpotifyTrack(track: SpotifyApiTrack, isNowPlaying: boolean, playedAt: number | null): Track {
-  // Spotify lists covers largest first; 300px is plenty for a card and keeps the inlined image small.
-  const image = track.album.images.find(item => item.width === 300)?.url ?? track.album.images[0]?.url ?? null;
+function toSpotifyTrack(track: SpotifyApiTrack, isNowPlaying: boolean, playedAt: number | null): SpotifyTrack {
+  // Spotify lists covers largest first; 64px is the smallest, plenty for a list row.
+  const image = track.album.images.at(-1)?.url ?? null;
   return {
     title: track.name,
     artist: track.artists.map(artist => artist.name).join(", "),
@@ -130,47 +141,33 @@ function toSpotifyTrack(track: SpotifyApiTrack, isNowPlaying: boolean, playedAt:
     image,
     url: track.external_urls.spotify,
     isNowPlaying,
-    playedAt,
-    source: "spotify"
+    playedAt
   };
 }
 
-/** What is playing on Spotify, else the last track played there, or null when Spotify is not set up. */
-export async function fetchSpotifyTrack(event: H3Event): Promise<Track | null> {
+/** The track playing now, if any, followed by the latest ones played; empty when Spotify is not set up or down. */
+export async function fetchSpotifyRecent(event: H3Event, limit = 5): Promise<SpotifyTrack[]> {
   const token = await getSpotifyAccessToken(event);
   if (!token)
-    return null;
+    return [];
 
   const headers = { authorization: `Bearer ${token}` };
   try {
     // 204 with no body when nothing is playing; a podcast episode has no track to show.
-    const current = await $fetch<SpotifyCurrentlyPlaying | undefined>("https://api.spotify.com/v1/me/player/currently-playing", {
-      headers,
-      timeout: MUSIC_TIMEOUT
-    });
-    if (current?.is_playing && current.currently_playing_type === "track" && current.item)
-      return toSpotifyTrack(current.item, true, null);
+    const [current, recent] = await Promise.all([
+      // The now-playing lookup is optional: if it fails, the history below still shows.
+      $fetch<SpotifyCurrentlyPlaying | undefined>("https://api.spotify.com/v1/me/player/currently-playing", { headers, timeout: MUSIC_TIMEOUT }).catch(() => undefined),
+      $fetch<SpotifyRecentlyPlayed>("https://api.spotify.com/v1/me/player/recently-played", { headers, query: { limit }, timeout: MUSIC_TIMEOUT })
+    ]);
 
-    const recent = await $fetch<SpotifyRecentlyPlayed>("https://api.spotify.com/v1/me/player/recently-played", {
-      headers,
-      query: { limit: 1 },
-      timeout: MUSIC_TIMEOUT
-    });
-    const last = recent.items[0];
-    return last ? toSpotifyTrack(last.track, false, Date.parse(last.played_at)) : null;
+    const tracks = recent.items.map(item => toSpotifyTrack(item.track, false, Date.parse(item.played_at)));
+    if (current?.is_playing && current.currently_playing_type === "track" && current.item) {
+      // The track playing now is often also the latest history entry: show it once, on top.
+      const nowPlaying = toSpotifyTrack(current.item, true, null);
+      return [nowPlaying, ...tracks.filter(track => track.url !== nowPlaying.url)].slice(0, limit);
+    }
+    return tracks;
   } catch {
-    return null;
+    return [];
   }
 }
-
-/** Spotify when it is set up and answering, Last.fm otherwise. */
-export async function fetchListening(event: H3Event): Promise<Track | null> {
-  return await fetchSpotifyTrack(event) ?? await fetchLastFmTrack(event);
-}
-
-/** `fetchListening` for the README routes, cached briefly so a burst of card loads costs one lookup. */
-export const fetchListeningCached = defineCachedFunction(fetchListening, {
-  name: "listening",
-  maxAge: 30,
-  getKey: () => "track"
-});

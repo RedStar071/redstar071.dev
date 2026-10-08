@@ -11,6 +11,12 @@
     "directory": ".output/public",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/readme/*", "!/readme/stack.svg"]
+    "run_worker_first": ["/api/*", "/readme/*"]
+  },
+  // `wrangler preview` (the Workers Builds deploy step for branches) refuses to run without this
+  // block. The Worker reads no variables at runtime, so there is nothing to put in it: the
+  // Bluesky app password is only needed at build time and must never be written here.
+  "previews": {
+    "vars": {}
   }
 }

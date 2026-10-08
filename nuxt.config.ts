@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     lastfmApiKey: "",
     // For the README cards under /readme/*, set as Worker secrets (see .env.example).
     githubToken: "",
+    // For the recently played list on the home page, set as Worker secrets (see .env.example).
     spotifyClientId: "",
     spotifyClientSecret: "",
     spotifyRefreshToken: "",
@@ -64,7 +65,6 @@ export default defineNuxtConfig({
         "/",
         "/rss.xml",
         "/readme.md",
-        "/readme/stack.svg",
         // Written by `nuxt generate` on its own; a server build has to ask. 404.html is the
         // page Cloudflare serves for an unknown path (`not_found_handling` in wrangler.jsonc).
         "/200.html",
