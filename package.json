@@ -48,7 +48,7 @@
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
     "nano-staged": "^1.0.2",
     "simple-git-hooks": "^2.14.0",
-    "taze": "^19.8.1",
+    "taze": "^21.0.0",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.3.11",
     "wrangler": "^4.130.0",
