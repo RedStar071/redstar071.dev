@@ -200,8 +200,8 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6
       discord-component-embed:
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^1.0.0
+        version: 1.1.0
       motion-v:
         specifier: ^2.4.4
         version: 2.4.4(@vueuse/core@14.4.0(vue@3.5.43(typescript@5.9.3)))(vue@3.5.43(typescript@5.9.3))
@@ -4359,12 +4359,10 @@ packages:
     resolution: {integrity: sha512-DPi0FmjiSU5EvQV0++GFDOJ9ASQUVFh5kD+OzOnYdi7n3Wpm9hWWGfB/O2blfHcMVTL5WkQXSnRiK9makhrcnw==}
     engines: {node: '>=0.3.1'}
 
-  discord-api-types@0.38.55:
-    resolution: {integrity: sha512-ytuaRTzdnHUCXJ6KjL9MrItQX0xKncBKEeYI1Bst4+ud47eejH3cG6gaesYakjpPcUhh68XYS2YwGq3mmujFsA==}
-
-  discord-component-embed@0.2.2:
-    resolution: {integrity: sha512-jKbi5bwoT7HGP+sKRUkcOlL5ixmXitfxICY0A35mfTkxAnjJvOr7OCn3JYxQaP73pHu8jRs0jMFyyUHlTMlH7g==}
-    engines: {node: '>=24.11'}
+  discord-component-embed@1.1.0:
+    resolution: {integrity: sha512-2HRI0kLs2fjKV0iGRsFl5Db/1T4n0NnDKNz+J+Cqt2eMPHoX2BWEUOQP0EFK7sdMva14kIv76agFNJobukTMgQ==}
+    engines: {bun: '>=1.4.2', node: ^24.22.1 || >=26.12.1}
+    hasBin: true
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
@@ -12615,11 +12613,7 @@ snapshots:
 
   diff@8.0.4: {}
 
-  discord-api-types@0.38.55: {}
-
-  discord-component-embed@0.2.2:
-    dependencies:
-      discord-api-types: 0.38.55
+  discord-component-embed@1.1.0: {}
 
   dom-serializer@2.0.0:
     dependencies:
