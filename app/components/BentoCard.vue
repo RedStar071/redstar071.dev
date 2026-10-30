@@ -15,13 +15,13 @@
       {{ title }}
     </h2>
     <div class="mt-6 flex-1">
-      <slot></slot>
+      <slot />
     </div>
     <div
       v-if="$slots.actions"
       class="mt-6 flex flex-wrap justify-end gap-2"
     >
-      <slot name="actions"></slot>
+      <slot name="actions" />
     </div>
   </section>
 </template>
