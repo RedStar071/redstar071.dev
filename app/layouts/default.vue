@@ -14,7 +14,7 @@
       tabindex="-1"
       class="flex-1 outline-none"
     >
-      <slot></slot>
+      <slot />
     </main>
     <AppFooter />
   </div>
