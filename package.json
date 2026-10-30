@@ -28,7 +28,7 @@
     "@takumi-rs/core": "^2.14.0",
     "@vueuse/nuxt": "^14.4.0",
     "airspace": "^0.1.6",
-    "discord-component-embed": "^0.2.2",
+    "discord-component-embed": "^1.0.0",
     "motion-v": "^2.4.4",
     "nuxt": "^4.5.2",
     "nuxt-og-image": "^6.8.0",
