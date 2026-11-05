@@ -58,13 +58,12 @@ export default defineNuxtConfig({
 
   nitro: {
     // Every page is still prerendered and served as a static asset; the Worker only
-    // answers what has to be live: /api/lastfm and the README cards under /readme/*.
+    // answers what has to be live: /api/* and the README cards under /readme/*.
     preset: "cloudflare-module",
     prerender: {
       routes: [
         "/",
         "/rss.xml",
-        "/readme.md",
         // Written by `nuxt generate` on its own; a server build has to ask. 404.html is the
         // page Cloudflare serves for an unknown path (`not_found_handling` in wrangler.jsonc).
         "/200.html",

@@ -1,48 +1,88 @@
-/** How much of each language is in the public repositories, as a README card. */
-export default defineEventHandler(async (event) => {
+import { embedFonts, MONO_FACE, SANS_FACE } from "../../utils/card-fonts";
+
+/** How much of each language is in the public repositories, as a bento card from the site. */
+
+const CARD = { title: "what i write in", icon: "code", shape: "sunny", tone: "tonal" } as const;
+
+const WIDTH = 495;
+const BAR_Y = 80;
+const LIST_Y = 108;
+const ROW_HEIGHT = 34;
+const GAP = 2;
+
+export default defineEventHandler((event) => {
   const theme = getCardTheme(event);
-  const stats = await fetchGitHubStats(event);
-  if (!stats?.languages.length)
-    return sendSvg(event, renderMessageCard("most used languages", "languages are taking a nap, back soon", theme), 300);
-
   const count = Math.min(Math.max(Number(getQuery(event).count) || 6, 2), 10);
-  const total = stats.languages.reduce((sum, language) => sum + language.size, 0);
-  const languages = stats.languages.slice(0, count).map(language => ({
-    ...language,
-    percent: (language.size / total) * 100
-  }));
 
-  // One stacked bar, then a legend in two columns.
-  const barWidth = 447;
-  let offset = 0;
-  const segments = languages.map((language) => {
-    const width = (language.percent / 100) * barWidth;
-    const segment = `<rect x="${24 + offset}" y="0" width="${width}" height="10" fill="${escapeXml(language.color)}" />`;
-    offset += width;
-    return segment;
-  }).join("");
+  return serveCard(event, async () => {
+    const stats = await fetchGitHubStats(event);
+    if (!stats?.languages.length)
+      return null;
 
-  const rows = Math.ceil(languages.length / 2);
-  const legend = languages.map((language, index) => {
-    const x = index < rows ? 24 : 262;
-    const y = 96 + (index % rows) * 26;
-    return `<g class="fade" style="animation-delay: ${index * 80}ms">
-  <circle cx="${x + 5}" cy="${y - 5}" r="5" fill="${escapeXml(language.color)}" />
-  <text x="${x + 18}" y="${y}" font-size="13">${escapeXml(truncate(language.name, 18))}</text>
-  <text x="${x + 209}" y="${y}" font-size="13" class="muted" text-anchor="end">${language.percent.toFixed(1)}%</text>
+    const total = stats.languages.reduce((sum, language) => sum + language.size, 0);
+    const languages = stats.languages.slice(0, count).map(language => ({
+      ...language,
+      name: truncate(language.name, 18),
+      percent: `${((language.size / total) * 100).toFixed(1)}%`,
+      share: language.size / total
+    }));
+
+    const fonts = await embedFonts([
+      { ...SANS_FACE, text: [CARD.title, ...languages.map(language => language.name)] },
+      { ...MONO_FACE, text: languages.map(language => language.percent) }
+    ]);
+
+    // One stacked pill, its segments 2px apart like the rows below; the rest of the languages
+    // make up the track at the end.
+    const barWidth = WIDTH - 48;
+    const shown = languages.reduce((sum, language) => sum + language.share, 0);
+    const usable = barWidth - GAP * (languages.length - (shown < 0.999 ? 0 : 1));
+    let offset = 24;
+    const segments = languages.map((language, index) => {
+      const width = Math.max(language.share * usable, 2);
+      const segment = `<rect x="${offset.toFixed(2)}" y="${BAR_Y}" width="${width.toFixed(2)}" height="12" rx="2" fill="${escapeXml(language.color)}" class="grow" style="animation-delay: ${index * 70}ms" />`;
+      offset += width + GAP;
+      return segment;
+    }).join("");
+
+    // The legend as two columns of rows, filled top to bottom.
+    const rows = Math.ceil(languages.length / 2);
+    const columnWidth = (barWidth - GAP) / 2;
+    const boxes = languages.map((_, index) => ({
+      x: 24 + (index < rows ? 0 : columnWidth + GAP),
+      y: LIST_Y + (index % rows) * (ROW_HEIGHT + GAP),
+      width: columnWidth,
+      height: ROW_HEIGHT
+    }));
+    const legend = languages.map((language, index) => {
+      const box = boxes[index]!;
+      const baseline = box.y + ROW_HEIGHT / 2 + 5;
+      return `<g class="rise" style="animation-delay: ${80 + index * 60}ms">
+  <circle cx="${box.x + 16}" cy="${box.y + ROW_HEIGHT / 2}" r="5" fill="${escapeXml(language.color)}" />
+  <text x="${box.x + 30}" y="${baseline}" class="sans highlight" font-size="14">${escapeXml(language.name)}</text>
+  <text x="${box.x + box.width - 14}" y="${baseline}" class="mono" font-size="12" text-anchor="end">${escapeXml(language.percent)}</text>
 </g>`;
-  }).join("\n");
+    }).join("\n");
 
-  const body = `<clipPath id="bar"><rect x="24" y="0" width="${barWidth}" height="10" rx="5" /></clipPath>
-<g transform="translate(0 54)"><rect x="24" y="0" width="${barWidth}" height="10" rx="5" fill="var(--track)" /><g clip-path="url(#bar)">${segments}</g></g>
+    const body = `<clipPath id="bar"><rect x="24" y="${BAR_Y}" width="${barWidth}" height="12" rx="6" /></clipPath>
+<rect x="24" y="${BAR_Y}" width="${barWidth}" height="12" rx="6" fill="var(--row)" />
+<g clip-path="url(#bar)">${segments}</g>
+${rowList("legend", boxes)}
 ${legend}`;
 
-  return sendSvg(event, renderCard({
-    width: 495,
-    height: 96 + (rows - 1) * 26 + 28,
-    title: "most used languages",
-    label: `Most used languages: ${languages.map(language => `${language.name} ${language.percent.toFixed(1)}%`).join(", ")}`,
-    theme,
-    body
-  }), 60 * 60);
+    return {
+      svg: renderCard({
+        ...CARD,
+        width: WIDTH,
+        height: LIST_Y + rows * (ROW_HEIGHT + GAP) - GAP + 24,
+        label: `Most used languages: ${languages.map(language => `${language.name} ${language.percent}`).join(", ")}`,
+        theme,
+        fonts: fonts.css,
+        styles: `.grow { transform-box: fill-box; transform-origin: left; animation: grow 0.9s cubic-bezier(0.38, 1.21, 0.22, 1) both; }
+@keyframes grow { from { transform: scaleX(0); } }`,
+        body
+      }),
+      maxAge: fonts.complete ? 60 * 60 : 5 * 60
+    };
+  }, pending => renderMessageCard(CARD, pending ? "counting the bytes, back in a minute" : "languages are taking a nap, back soon", theme));
 });
