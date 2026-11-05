@@ -46,18 +46,17 @@ The repository also includes a Pages CMS configuration in `.pages.yml`: **Writin
 
 ## GitHub profile README
 
-Nitro also writes the README for [github.com/RedStar071](https://github.com/RedStar071), like github-readme-stats and friends, but from this site:
+The README of [github.com/RedStar071](https://github.com/RedStar071) is written by hand in the `RedStar071/RedStar071` repository. This site serves its live cards, like github-readme-stats and friends:
 
 | Route | What it is |
 | --- | --- |
-| `/readme.md` | The README itself, from `content/index.yml` and the projects. Prerendered. |
-| `/readme/stats.svg` | Stars, commits, PRs, issues and followers. Needs `NUXT_GITHUB_TOKEN`. |
+| `/readme/stats.svg` | Total contributions with the current and longest streak, after github-readme-streak-stats, plus stars, PRs, issues and followers. Needs `NUXT_GITHUB_TOKEN`. |
 | `/readme/languages.svg` | Most used languages across public repositories. Needs `NUXT_GITHUB_TOKEN`. |
 
-Every card follows the reader's light or dark theme; add `?theme=dark` or `?theme=light` to pin one.
-Copy `/readme.md` into the `RedStar071/RedStar071` repository: the stats cards update themselves, so it only needs copying again when the bio, the projects, the stack labels or the section titles in `content/index.yml` change.
+The cards are drawn like the site's bento cards (night surfaces, the ember red, a Material 3 shape badge, a sticker star, Google Sans Flex and Google Sans Code), laid out as node trees and rendered to SVG with [Takumi](https://takumi.kane.tw) on the Worker. Takumi draws text as outlines, so a card needs no fonts or images from outside itself; a card that follows the reader's theme holds both renders and lets `prefers-color-scheme` pick one. Every card follows the reader's light or dark theme; add `?theme=dark` or `?theme=light` to pin one.
+GitHub shows README images through its camo proxy, which gives up after a few seconds, so the cards are kept in Cloudflare's edge cache and redrawn in the background once they are an hour old. A card that is not cached yet and takes too long to draw answers with a placeholder for a minute instead of a broken image.
 
-The pages are still prerendered and served as static assets; the Worker built by Nitro's `cloudflare-module` preset only runs `/api/*` and `/readme/*`. Set the secrets on it with `wrangler secret put <NAME>` (see `.env.example`), and get a Spotify refresh token with `pnpm spotify:token`. Spotify expires it after six months, and the recently played card stays empty until you run it again.
+The pages are still prerendered and served as static assets; the Worker built by Nitro's `cloudflare-module` preset only runs `/api/*` and `/readme/*`. Set the secrets on it with `wrangler secret put <NAME>` (see `.env.example`), and get a Spotify refresh token with `pnpm spotify:token`. Spotify expires it after six months; until you run it again, or without it at all, the recently played card reads the public card at `spotify-recently-played-readme.vercel.app` instead.
 
 ## License
 

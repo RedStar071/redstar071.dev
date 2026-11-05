@@ -1,4 +1,5 @@
 import type { H3Event } from "h3";
+import { SPOTIFY_USER_ID } from "#shared/utils/spotify";
 
 /** One track, as Last.fm reports it. */
 export interface Track {
@@ -145,12 +146,8 @@ function toSpotifyTrack(track: SpotifyApiTrack, isNowPlaying: boolean, playedAt:
   };
 }
 
-/** The track playing now, if any, followed by the latest ones played; empty when Spotify is not set up or down. */
-export async function fetchSpotifyRecent(event: H3Event, limit = 5): Promise<SpotifyTrack[]> {
-  const token = await getSpotifyAccessToken(event);
-  if (!token)
-    return [];
-
+/** The track playing now, if any, followed by the latest ones played, from the Spotify API itself. */
+async function fetchSpotifyApiRecent(token: string, limit: number): Promise<SpotifyTrack[]> {
   const headers = { authorization: `Bearer ${token}` };
   try {
     // 204 with no body when nothing is playing; a podcast episode has no track to show.
@@ -170,4 +167,76 @@ export async function fetchSpotifyRecent(event: H3Event, limit = 5): Promise<Spo
   } catch {
     return [];
   }
+}
+
+/** The public card the profile README shows; the service holds its own sign-in to the account. */
+const SPOTIFY_CARD_URL = "https://spotify-recently-played-readme.vercel.app/api";
+
+const XML_ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: "\"", apos: "'" };
+
+function decodeXml(value: string) {
+  return value.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (entity, code: string) => {
+    if (code[0] === "#")
+      return String.fromCodePoint(code[1] === "x" || code[1] === "X" ? Number.parseInt(code.slice(2), 16) : Number(code.slice(1)));
+    return XML_ENTITIES[code.toLowerCase()] ?? entity;
+  });
+}
+
+/**
+ * Reads the recently played list off one card SVG. Each track is an album link around its cover
+ * (inlined as a data URI), a `<title>` of "name / by artist / from album", a link to the track and,
+ * once it has finished, a "Played <date> at <time> UTC" `<title>`.
+ */
+export function parseSpotifyCard(svg: string, limit: number): SpotifyTrack[] {
+  const tracks: SpotifyTrack[] = [];
+  for (const block of svg.split(/<a\s[^>]*?href="https:\/\/open\.spotify\.com\/album\//).slice(1)) {
+    const url = block.match(/href="(https:\/\/open\.spotify\.com\/track\/[^"]+)"/)?.[1];
+    const lines = block.match(/<title>([^<]*)<\/title>/)?.[1]?.split("\n").map(line => decodeXml(line.trim()));
+    if (!url || !lines?.[0])
+      continue;
+
+    const artist = lines.find(line => line.startsWith("by "))?.slice(3) ?? "";
+    const album = lines.find(line => line.startsWith("from "))?.slice(5) || null;
+    const played = block.match(/<title>Played ([^<]+?) at (\d{1,2}:\d{2}) UTC<\/title>/);
+    const playedAt = played ? Date.parse(`${played[1]} ${played[2]} UTC`) : Number.NaN;
+
+    tracks.push({
+      title: lines[0],
+      artist,
+      album,
+      image: block.match(/<image\s[^>]*?href="(data:image\/[^"]+)"/)?.[1] ?? null,
+      url: decodeXml(url),
+      // No played time means it has not finished: the card is showing it as playing now.
+      isNowPlaying: !played,
+      playedAt: Number.isNaN(playedAt) ? null : playedAt
+    });
+    if (tracks.length >= limit)
+      break;
+  }
+  return tracks;
+}
+
+/** The recently played list from the public card, for when this site has no working Spotify sign-in. */
+async function fetchSpotifyCardRecent(limit: number): Promise<SpotifyTrack[]> {
+  try {
+    const svg = await $fetch<string>(SPOTIFY_CARD_URL, {
+      query: { user: SPOTIFY_USER_ID, count: limit, unique: true },
+      responseType: "text",
+      timeout: MUSIC_TIMEOUT
+    });
+    return parseSpotifyCard(svg, limit);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * The track playing now, if any, followed by the latest ones played. From the Spotify API with
+ * this site's credentials when they work; without them, or once the refresh token has expired,
+ * from the public card the README shows. Empty when both are down.
+ */
+export async function fetchSpotifyRecent(event: H3Event, limit = 5): Promise<SpotifyTrack[]> {
+  const token = await getSpotifyAccessToken(event);
+  const tracks = token ? await fetchSpotifyApiRecent(token, limit) : [];
+  return tracks.length ? tracks : await fetchSpotifyCardRecent(limit);
 }

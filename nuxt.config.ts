@@ -58,13 +58,26 @@ export default defineNuxtConfig({
 
   nitro: {
     // Every page is still prerendered and served as a static asset; the Worker only
-    // answers what has to be live: /api/lastfm and the README cards under /readme/*.
+    // answers what has to be live: /api/* and the README cards under /readme/*.
     preset: "cloudflare-module",
+    // The README cards render with Takumi, whose Workers build imports its WebAssembly as a module.
+    experimental: {
+      wasm: true
+    },
+    rollupConfig: {
+      plugins: [{
+        // Takumi imports React on demand, only to render JSX components with hooks. The README
+        // cards are plain node trees and the Worker bundle cannot leave an import unresolved,
+        // so React resolves to an empty module, which Takumi reads as "not installed".
+        name: "takumi-without-react",
+        resolveId: id => (id === "react" ? "\0react-stub" : null),
+        load: id => (id === "\0react-stub" ? "export default {};" : null)
+      }]
+    },
     prerender: {
       routes: [
         "/",
         "/rss.xml",
-        "/readme.md",
         // Written by `nuxt generate` on its own; a server build has to ask. 404.html is the
         // page Cloudflare serves for an unknown path (`not_found_handling` in wrangler.jsonc).
         "/200.html",

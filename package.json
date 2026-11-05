@@ -25,7 +25,7 @@
     "@nuxt/fonts": "^0.13.0",
     "@nuxt/image": "^2.1.0",
     "@nuxt/ui": "^4.11.1",
-    "@takumi-rs/core": "^2.14.0",
+    "@takumi-rs/core": "^2.19.0",
     "@vueuse/nuxt": "^14.4.0",
     "airspace": "^0.1.6",
     "discord-component-embed": "^0.2.2",
@@ -34,6 +34,7 @@
     "nuxt-og-image": "^6.8.0",
     "nuxt-schema-org": "^6.3.2",
     "tailwindcss": "^4.3.3",
+    "takumi-js": "^2.19.0",
     "ufo": "^1.6.4"
   },
   "devDependencies": {
