@@ -170,34 +170,48 @@ function calendarQuery(years: number[]) {
   return `query ($login: String!) { user(login: $login) {${collections}\n} }`;
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 /** Streaks over a day-by-day contribution list, the way github-readme-streak-stats counts them. */
 export function computeStreaks(days: Array<{ date: string; count: number }>, today: string): Omit<GitHubStreak, "total"> {
   const past = days.filter(day => day.date <= today).sort((a, b) => a.date.localeCompare(b.date));
   const empty: Streak = { length: 0, start: today, end: today };
 
+  // A year without contributions is not in `contributionYears`, so its days are missing rather
+  // than zero: a run only goes on while each day follows the one before it.
+  const follows = (date: string, previous: string | undefined) =>
+    previous !== undefined && Date.parse(`${date}T00:00:00Z`) - Date.parse(`${previous}T00:00:00Z`) === DAY_MS;
+
   let longest = empty;
   let runStart = "";
   let runLength = 0;
-  for (const day of past) {
+  past.forEach((day, index) => {
     if (day.count === 0) {
       runLength = 0;
-      continue;
+      return;
     }
-    if (runLength === 0)
+    if (runLength === 0 || !follows(day.date, past[index - 1]?.date)) {
       runStart = day.date;
+      runLength = 0;
+    }
     runLength++;
     if (runLength > longest.length)
       longest = { length: runLength, start: runStart, end: day.date };
-  }
+  });
 
   // Today without contributions yet still counts the run up to yesterday.
   let index = past.length - 1;
   if (past[index]?.date === today && past[index]!.count === 0)
     index--;
   let current = empty;
-  for (; index >= 0 && past[index]!.count > 0; index--) {
-    const date = past[index]!.date;
-    current = current.length ? { length: current.length + 1, start: date, end: current.end } : { length: 1, start: date, end: date };
+  // The run has to reach today or yesterday to be current.
+  if (index >= 0 && (past[index]!.date === today || follows(today, past[index]!.date))) {
+    for (; index >= 0 && past[index]!.count > 0; index--) {
+      const date = past[index]!.date;
+      if (current.length && !follows(current.start, date))
+        break;
+      current = current.length ? { length: current.length + 1, start: date, end: current.end } : { length: 1, start: date, end: date };
+    }
   }
 
   return {

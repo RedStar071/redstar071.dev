@@ -11,16 +11,18 @@ export interface CardFace {
   family: string;
   /** The Google Fonts css2 `family=` value, axes and all. */
   query: string;
+  /** The face's weight, declared in its `@font-face` so the browser never fakes a bolder one. */
+  weight: number;
   /** Every string drawn in this face. */
   text: string[];
 }
 
 /** Display numbers: Google Sans Flex at its heaviest with fully round terminals, like the hero name. */
-export const ROUND_FACE = { family: "card-round", query: "Google Sans Flex:wght,ROND@900,100" } as const;
+export const ROUND_FACE = { family: "card-round", query: "Google Sans Flex:wght,ROND@900,100", weight: 900 } as const;
 /** Titles and labels, at the weight of the site's card titles. */
-export const SANS_FACE = { family: "card-sans", query: "Google Sans Flex:wght@500" } as const;
+export const SANS_FACE = { family: "card-sans", query: "Google Sans Flex:wght@500", weight: 500 } as const;
 /** Dates and small print, like the site's mono metadata. */
-export const MONO_FACE = { family: "card-mono", query: "Google Sans Code:wght@400" } as const;
+export const MONO_FACE = { family: "card-mono", query: "Google Sans Code:wght@400", weight: 400 } as const;
 
 /** What each family falls back to when the font cannot be fetched. */
 export const FALLBACK_STACKS: Record<string, string> = {
@@ -57,7 +59,7 @@ async function fetchFace(face: CardFace) {
     return null;
 
   const font = await $fetch<ArrayBuffer>(url, { responseType: "arrayBuffer", timeout: FONT_TIMEOUT });
-  return `@font-face { font-family: "${face.family}"; src: url(data:font/woff2;base64,${toBase64(new Uint8Array(font))}) format("woff2"); }`;
+  return `@font-face { font-family: "${face.family}"; font-weight: ${face.weight}; src: url(data:font/woff2;base64,${toBase64(new Uint8Array(font))}) format("woff2"); }`;
 }
 
 /**

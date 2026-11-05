@@ -35,7 +35,7 @@ function formatRange(streak: Streak, thisYear: number) {
 export default defineEventHandler((event) => {
   const theme = getCardTheme(event);
 
-  return serveCard(event, async () => {
+  return serveCard(event, { theme }, async () => {
     const [stats, streak] = await Promise.all([fetchGitHubStats(event), fetchGitHubStreak(event)]);
     if (!stats || !streak)
       return null;

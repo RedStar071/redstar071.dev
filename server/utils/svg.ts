@@ -203,32 +203,57 @@ function edgeCache(): Cache | undefined {
   return (globalThis as { caches?: { default?: Cache } }).caches?.default;
 }
 
+/** Draws in progress in this isolate, by cache key, so concurrent requests share one. */
+const drawing = new Map<string, Promise<DrawnCard | null>>();
+
 /**
  * Serves a README card fast enough for camo: from the edge cache when it can (redrawing in the
  * background once it is older than its `maxAge`), else drawn now, else a placeholder in time.
- * `draw` returns null when there is nothing to draw; `placeholder` then fills in.
+ * `draw` returns null when there is nothing to draw; `placeholder` then fills in. `variant` holds
+ * the query values the route reads: they, and nothing else in the URL, pick the cache entry.
  */
-export async function serveCard(event: H3Event, draw: () => Promise<DrawnCard | null>, placeholder: (pending: boolean) => string) {
+export async function serveCard(
+  event: H3Event,
+  variant: Record<string, string | number>,
+  draw: () => Promise<DrawnCard | null>,
+  placeholder: (pending: boolean) => string
+) {
   const cache = edgeCache();
-  // The whole URL, so `?theme=` and `?count=` get their own entries.
-  const key = new Request(getRequestURL(event).toString());
+  const url = getRequestURL(event);
+  const keyUrl = new URL(url.pathname, url.origin);
+  for (const [name, value] of Object.entries(variant).sort(([a], [b]) => a.localeCompare(b)))
+    keyUrl.searchParams.set(name, String(value));
+  const key = keyUrl.toString();
 
-  const redraw = async () => {
-    const card = await draw().catch(() => null);
-    if (card && cache) {
-      await cache.put(key, new Response(card.svg, {
-        headers: {
-          "content-type": "image/svg+xml; charset=utf-8",
-          "cache-control": `public, max-age=${EDGE_TTL}`,
-          [DRAWN_AT]: String(Date.now()),
-          [MAX_AGE]: String(card.maxAge)
-        }
-      })).catch(() => {});
-    }
-    return card;
+  const redraw = () => {
+    const pending = drawing.get(key);
+    if (pending)
+      return pending;
+    const next = (async () => {
+      const card = await draw().catch(() => null);
+      if (card && cache) {
+        await cache.put(new Request(key), new Response(card.svg, {
+          headers: {
+            "content-type": "image/svg+xml; charset=utf-8",
+            "cache-control": `public, max-age=${EDGE_TTL}`,
+            [DRAWN_AT]: String(Date.now()),
+            [MAX_AGE]: String(card.maxAge)
+          }
+        })).catch(() => {});
+      }
+      return card;
+    })().finally(() => drawing.delete(key));
+    drawing.set(key, next);
+    return next;
   };
 
-  const hit = await cache?.match(key).catch(() => undefined);
+  // Outside Cloudflare there is nowhere to keep a card for the next request: just draw it.
+  if (!cache) {
+    const card = await redraw();
+    return card ? sendSvg(event, card.svg, card.maxAge) : sendSvg(event, placeholder(false), 300);
+  }
+
+  const hit = await cache.match(new Request(key)).catch(() => undefined);
   if (hit) {
     const maxAge = Number(hit.headers.get(MAX_AGE)) || 60 * 60;
     if (Date.now() - Number(hit.headers.get(DRAWN_AT)) > maxAge * 1000)
@@ -236,14 +261,14 @@ export async function serveCard(event: H3Event, draw: () => Promise<DrawnCard | 
     return sendSvg(event, await hit.text(), maxAge);
   }
 
-  const drawing = redraw();
+  const current = redraw();
   const card = await Promise.race([
-    drawing,
+    current,
     new Promise<undefined>(resolve => setTimeout(resolve, CARD_DEADLINE, undefined))
   ]);
   if (card === undefined) {
     // Still drawing: keep going after the response, so the next request finds it cached.
-    event.waitUntil(drawing);
+    event.waitUntil(current);
     return sendSvg(event, placeholder(true), 60);
   }
   if (!card)

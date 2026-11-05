@@ -9,17 +9,20 @@ const BAR_Y = 80;
 const LIST_Y = 108;
 const ROW_HEIGHT = 34;
 const GAP = 2;
+const MIN_SEGMENT = 2;
 
 export default defineEventHandler((event) => {
   const theme = getCardTheme(event);
   const count = Math.min(Math.max(Number(getQuery(event).count) || 6, 2), 10);
 
-  return serveCard(event, async () => {
+  return serveCard(event, { theme, count }, async () => {
     const stats = await fetchGitHubStats(event);
     if (!stats?.languages.length)
       return null;
 
     const total = stats.languages.reduce((sum, language) => sum + language.size, 0);
+    if (total <= 0)
+      return null;
     const languages = stats.languages.slice(0, count).map(language => ({
       ...language,
       name: truncate(language.name, 18),
@@ -33,13 +36,15 @@ export default defineEventHandler((event) => {
     ]);
 
     // One stacked pill, its segments 2px apart like the rows below; the rest of the languages
-    // make up the track at the end.
+    // make up the track at the end. Every segment gets at least MIN_SEGMENT, reserved up front
+    // so the tiny ones still fit inside the pill.
     const barWidth = WIDTH - 48;
     const shown = languages.reduce((sum, language) => sum + language.share, 0);
-    const usable = barWidth - GAP * (languages.length - (shown < 0.999 ? 0 : 1));
+    const gaps = GAP * (languages.length - (shown < 0.999 ? 0 : 1));
+    const spread = Math.max(barWidth - gaps - MIN_SEGMENT * languages.length, 0);
     let offset = 24;
     const segments = languages.map((language, index) => {
-      const width = Math.max(language.share * usable, 2);
+      const width = MIN_SEGMENT + language.share * spread;
       const segment = `<rect x="${offset.toFixed(2)}" y="${BAR_Y}" width="${width.toFixed(2)}" height="12" rx="2" fill="${escapeXml(language.color)}" class="grow" style="animation-delay: ${index * 70}ms" />`;
       offset += width + GAP;
       return segment;
