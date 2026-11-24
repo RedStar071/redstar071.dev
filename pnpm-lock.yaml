@@ -209,8 +209,8 @@ importers:
         specifier: ^0.1.6
         version: 0.1.8
       discord-component-embed:
-        specifier: ^0.5.0
-        version: 0.5.1
+        specifier: ^1.0.0
+        version: 1.1.1
       lru-cache:
         specifier: ^11.5.3
         version: 11.5.3
@@ -4511,9 +4511,9 @@ packages:
   diff3@0.0.3:
     resolution: {integrity: sha512-iSq8ngPOt0K53A6eVr4d5Kn6GNrM2nQZtC740pzIriHtn4pOQ2lyzEXQMBeVcWERN0ye7fhBsk9PbLLQOnUx/g==}
 
-  discord-component-embed@0.5.1:
-    resolution: {integrity: sha512-HwrhufeFp7HPwQWW11/RnEGGL6rsG7Dxvpl81M6lZ6R/w91I29xXclCcxrNtJoCku2xbmvA3abtLPp418r7g0w==}
-    engines: {bun: '>=1.4.2', node: '>=24.11'}
+  discord-component-embed@1.1.1:
+    resolution: {integrity: sha512-02RVlRANPRugsvzaSkbRRUfPTq/cwUeQDcMwr4gn01/B815Cl4t1kwZfhUjBftVg3ua8T6vGzvrOjJesy5JxnA==}
+    engines: {bun: '>=1.4.2', node: ^24.22.1 || >=26.12.1}
     hasBin: true
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -12670,7 +12670,7 @@ snapshots:
 
   diff3@0.0.3: {}
 
-  discord-component-embed@0.5.1: {}
+  discord-component-embed@1.1.1: {}
 
   dot-prop@10.2.0:
     dependencies:

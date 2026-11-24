@@ -28,7 +28,7 @@
     "@takumi-rs/core": "^2.19.0",
     "@vueuse/nuxt": "^14.4.0",
     "airspace": "^0.1.6",
-    "discord-component-embed": "^0.5.0",
+    "discord-component-embed": "^1.0.0",
     "lru-cache": "^11.5.3",
     "motion-v": "^2.4.4",
     "nitro": "3.0.261103-rc",
