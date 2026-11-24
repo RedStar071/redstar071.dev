@@ -1,6 +1,7 @@
 import type { Node } from "takumi-js";
 import type { CardPalette } from "../../utils/card";
 import type { Streak } from "../../utils/github";
+import { defineHandler } from "nitro/h3";
 import { container, text } from "takumi-js/helpers";
 import { cardFrame, messageCard, MONO, renderCard, ROUND, rowList, shapeRing, stickerStar } from "../../utils/card";
 
@@ -45,7 +46,7 @@ function column(palette: CardPalette, figure: Node, label: string, range: string
   })];
 }
 
-export default defineEventHandler((event) => {
+export default defineHandler((event) => {
   const theme = getCardTheme(event);
 
   return serveCard(event, { theme }, async () => {

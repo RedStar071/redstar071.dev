@@ -1,7 +1,7 @@
 import type { RecordInput } from "airspace";
-import type { projects } from "../../../shared/collections";
-import { ProjectsProvider } from "./projects";
-import { StandardSiteProvider } from "./standard-site";
+import type { projects } from "../../../shared/collections.ts";
+import { ProjectsProvider } from "./projects.ts";
+import { StandardSiteProvider } from "./standard-site.ts";
 
 export interface SyncPost {
   /** Absolute path of the markdown file, so a discovered announcement can be written back. */

@@ -6,7 +6,7 @@
  */
 import { readFile, rename, rm, writeFile } from "node:fs/promises";
 import process from "node:process";
-import { ATPROTO_DID } from "../../shared/atproto";
+import { ATPROTO_DID } from "../../shared/atproto.ts";
 
 const DAY = 24 * 60 * 60 * 1000;
 

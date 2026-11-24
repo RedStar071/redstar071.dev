@@ -1,5 +1,8 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import { SPOTIFY_USER_ID } from "#shared/utils/spotify";
+import { defineCachedFunction } from "nitro/cache";
+import { useRuntimeConfig } from "nuxt/server";
+import { $fetch } from "ofetch";
 
 /** One track, as Last.fm reports it. */
 export interface Track {
@@ -32,8 +35,8 @@ interface LastFmApiResponse {
 const MUSIC_TIMEOUT = 3_000;
 
 /** The latest scrobble on Last.fm, or null with no key, no scrobble or Last.fm down. */
-export async function fetchLastFmTrack(event: H3Event): Promise<Track | null> {
-  const config = useRuntimeConfig(event);
+export async function fetchLastFmTrack(): Promise<Track | null> {
+  const config = useRuntimeConfig();
   if (!config.lastfmApiKey || !config.public.lastfmUsername)
     return null;
 
@@ -105,8 +108,8 @@ export interface SpotifyTrack {
  * Spotify expires a refresh token six months after it was granted: from then on this returns null
  * until `pnpm spotify:token` issues a new one.
  */
-const getSpotifyAccessToken = defineCachedFunction(async (event: H3Event): Promise<string | null> => {
-  const config = useRuntimeConfig(event);
+const getSpotifyAccessToken = defineCachedFunction(async (_event: H3Event): Promise<string | null> => {
+  const config = useRuntimeConfig();
   if (!config.spotifyClientId || !config.spotifyClientSecret || !config.spotifyRefreshToken)
     return null;
 
@@ -219,7 +222,7 @@ export function parseSpotifyCard(svg: string, limit: number): SpotifyTrack[] {
 /** The recently played list from the public card, for when this site has no working Spotify sign-in. */
 async function fetchSpotifyCardRecent(limit: number): Promise<SpotifyTrack[]> {
   try {
-    const svg = await $fetch<string>(SPOTIFY_CARD_URL, {
+    const svg = await $fetch<string, "text">(SPOTIFY_CARD_URL, {
       query: { user: SPOTIFY_USER_ID, count: limit, unique: true },
       responseType: "text",
       timeout: MUSIC_TIMEOUT

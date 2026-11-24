@@ -1,4 +1,6 @@
 import type { CardPalette } from "../../utils/card";
+import { defineHandler } from "nitro/h3";
+import { getQuery } from "nuxt/server";
 import { container, text } from "takumi-js/helpers";
 import { cardFrame, messageCard, MONO, renderCard, rowList } from "../../utils/card";
 
@@ -11,7 +13,7 @@ const ROW_HEIGHT = 34;
 const GAP = 2;
 const MIN_SEGMENT = 2;
 
-export default defineEventHandler((event) => {
+export default defineHandler((event) => {
   const theme = getCardTheme(event);
   const count = Math.min(Math.max(Number(getQuery(event).count) || 6, 2), 10);
 

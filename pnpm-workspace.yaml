@@ -1,3 +1,14 @@
+minimumReleaseAgeExclude:
+  - "@nuxt/kit@4.7.0"
+  - "@nuxt/nitro-server@4.7.0"
+  - "@nuxt/nitro-v3-server@4.7.0"
+  - "@nuxt/schema@4.7.0"
+  - "@nuxt/vite-builder@4.7.0"
+  - "@nuxt/vite-server@4.7.0"
+  - nitropack@2.14.0
+  - nuxt@4.7.0
+  - nuxt-og-image@7.2.0
+  - "@nuxt/ui@4.13.1"
 shellEmulator: true
 
 trustPolicy: no-downgrade

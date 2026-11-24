@@ -9,14 +9,14 @@
  * A plain `pnpm generate` or `pnpm build` skips it, so a local build never
  * writes to the PDS. Writing needs `ATPROTO_APP_PASSWORD` in `.env`.
  */
-import type { SyncPost, SyncProject } from "./providers";
+import type { SyncPost, SyncProject } from "./providers/index.ts";
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import process from "node:process";
 import { defineNuxtModule, useLogger, useNuxt } from "nuxt/kit";
 import { parse } from "yaml";
-import { syncAll } from "./providers";
+import { syncAll } from "./providers/index.ts";
 
 const logger = useLogger("sync");
 
