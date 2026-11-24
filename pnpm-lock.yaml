@@ -243,25 +243,25 @@ importers:
         version: 1.6.4
     devDependencies:
       '@antfu/eslint-config':
-        specifier: ^6.1.0
+        specifier: 6.7.3
         version: 6.7.3(@typescript-eslint/typescript-estree@8.70.0(supports-color@10.2.2)(typescript@5.9.3))(@typescript-eslint/utils@8.70.0(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(@vue/compiler-sfc@3.5.46)(eslint-plugin-vuejs-accessibility@2.6.0(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(globals@17.12.0)(supports-color@10.2.2))(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
       '@atproto/lex':
-        specifier: ^0.4.0
+        specifier: 0.4.8
         version: 0.4.8
       '@commitlint/cli':
-        specifier: ^21.2.3
+        specifier: 21.2.3
         version: 21.2.3(@types/node@26.6.2)(conventional-commits-parser@7.1.2)(typescript@5.9.3)
       '@commitlint/config-conventional':
-        specifier: ^21.2.3
+        specifier: 21.2.3
         version: 21.2.3
       '@nuxt/devtools':
-        specifier: ^4.2.0
+        specifier: 4.2.0
         version: 4.2.0(@devframes/agentic@1.4.0)(@devframes/hub-ui@1.4.0(@devframes/hub@1.4.0(@devframes/agentic@1.4.0)(crossws@0.4.17(srvx@1.0.8))(devframe@1.4.0)(ocache@0.3.2))(@devframes/json-render@1.4.0(@devframes/hub@1.4.0(@devframes/agentic@1.4.0)(crossws@0.4.17(srvx@1.0.8))(devframe@1.4.0)(ocache@0.3.2))(devframe@1.4.0))(devframe@1.4.0))(@nuxt/kit@4.7.0(@nuxt/schema@4.7.0)(confbox@0.3.2)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.155.0)(rolldown@1.2.19)(unplugin@3.7.0(esbuild@0.28.2)(rolldown@1.2.19)(rollup@4.68.8)(vite@8.3.8)))(cac@7.1.1)(crossws@0.4.17(srvx@1.0.8))(esbuild@0.28.2)(nitro@3.0.261103-rc)(nitropack@2.14.0(acorn@8.18.0)(ioredis@5.11.1(supports-color@10.2.2))(oxc-parser@0.155.0)(rolldown@1.2.19)(srvx@1.0.8)(supports-color@10.2.2)(vite@8.3.8))(ocache@0.3.2)(rolldown@1.2.19)(rollup@4.68.8)(srvx@1.0.8)(unstorage@1.17.6(db0@0.3.4)(ioredis@5.11.1(supports-color@10.2.2)))(vite@8.3.8)(vue@3.5.46(typescript@5.9.3))
       '@nuxt/eslint':
-        specifier: ^1.17.0
+        specifier: 1.17.0
         version: 1.17.0(@nuxt/schema@4.7.0)(@typescript-eslint/utils@8.70.0(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(@vue/compiler-sfc@3.5.46)(confbox@0.3.2)(crossws@0.4.17(srvx@1.0.8))(dotenv@17.4.2)(esbuild@0.28.2)(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.5)(ocache@0.3.2)(oxc-parser@0.155.0)(rolldown@1.2.19)(rollup@4.68.8)(srvx@1.0.8)(supports-color@10.2.2)(typescript@5.9.3)(unplugin@3.7.0(esbuild@0.28.2)(rolldown@1.2.19)(rollup@4.68.8)(vite@8.3.8))(vite@8.3.8)
       cz-conventional-changelog:
-        specifier: ^3.3.0
+        specifier: 3.3.0
         version: 3.3.0(@types/node@26.6.2)(typescript@5.9.3)
       eslint:
         specifier: ^9.38.0
@@ -273,25 +273,25 @@ importers:
         specifier: ^2.4.1
         version: 2.6.0(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(globals@17.12.0)(supports-color@10.2.2)
       nano-staged:
-        specifier: ^1.0.2
+        specifier: 1.0.2
         version: 1.0.2
       simple-git-hooks:
-        specifier: ^2.14.0
+        specifier: 2.14.0
         version: 2.14.0
       taze:
-        specifier: ^19.8.1
+        specifier: 19.17.2
         version: 19.17.2
       typescript:
-        specifier: ^5.9.3
+        specifier: 5.9.3
         version: 5.9.3
       vue-tsc:
-        specifier: ^3.3.11
+        specifier: 3.3.11
         version: 3.3.11(typescript@5.9.3)
       wrangler:
-        specifier: ^4.135.0
+        specifier: 4.135.0
         version: 4.135.0(@types/node@26.6.2)
       yaml:
-        specifier: ^2.9.1
+        specifier: 2.9.1
         version: 2.9.1
 
 packages:
