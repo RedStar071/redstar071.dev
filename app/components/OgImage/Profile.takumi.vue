@@ -71,9 +71,29 @@ const stripes: CSSProperties = {
 };
 
 const stars = [
-  { left: 1020, top: 300, size: 64, rotate: 12 },
-  { left: 1110, top: 420, size: 34, rotate: -8 },
-  { left: 110, top: 330, size: 44, rotate: -14 },
-  { left: 60, top: 450, size: 26, rotate: 20 }
+  {
+    left: 1020,
+    top: 300,
+    size: 64,
+    rotate: 12
+  },
+  {
+    left: 1110,
+    top: 420,
+    size: 34,
+    rotate: -8
+  },
+  {
+    left: 110,
+    top: 330,
+    size: 44,
+    rotate: -14
+  },
+  {
+    left: 60,
+    top: 450,
+    size: 26,
+    rotate: 20
+  }
 ];
 </script>

@@ -57,7 +57,9 @@ export default defineNuxtModule({
           }, { dryRun });
           logger.info("Complete");
         } catch (error) {
-          logger.warn("Failed:", error instanceof Error ? error.message : error);
+          logger.warn("Failed:", error instanceof Error
+            ? error.message
+            : error);
         }
       });
     });
@@ -88,9 +90,13 @@ async function readPosts(blogDir: string): Promise<SyncPost[]> {
       file: join(blogDir, file),
       slug: basename(file, ".md"),
       title: data.title,
-      description: typeof data.description === "string" ? data.description : "",
+      description: typeof data.description === "string"
+        ? data.description
+        : "",
       date: new Date(data.date as string).toISOString(),
-      bluesky: typeof data.bluesky === "string" ? data.bluesky : undefined,
+      bluesky: typeof data.bluesky === "string"
+        ? data.bluesky
+        : undefined,
       text: toPlainText(match[2]!)
     });
   }

@@ -166,7 +166,9 @@ const hasCover = computed(() => !!track.value?.image);
 
 // Links go to Gramophone, an alternative Last.fm frontend; the small logo keeps the credit on Last.fm.
 const profileUrl = computed(() => `${GRAMOPHONE_URL}/profile/${encodeURIComponent(config.public.lastfmUsername)}`);
-const artistUrl = computed(() => track.value ? `${GRAMOPHONE_URL}/artists/${encodeURIComponent(track.value.artist)}` : GRAMOPHONE_URL);
+const artistUrl = computed(() => track.value
+  ? `${GRAMOPHONE_URL}/artists/${encodeURIComponent(track.value.artist)}`
+  : GRAMOPHONE_URL);
 const trackUrl = computed(() => {
   if (!track.value)
     return GRAMOPHONE_URL;

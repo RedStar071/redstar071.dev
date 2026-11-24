@@ -28,7 +28,9 @@ type CardPage = Pick<PagesCollectionItem, "title" | "description" | "path">;
 
 /** Discord fetches every URL in the card itself, so the relative paths content files carry have to be absolute. */
 function absolute(site: DiscordCardSite, path: string) {
-  return hasProtocol(path) ? path : joinURL(site.url, path);
+  return hasProtocol(path)
+    ? path
+    : joinURL(site.url, path);
 }
 
 /** Trims a description down to one readable row: its first sentence, cut at the last word that fits. */
@@ -41,7 +43,9 @@ function summarize(text: string, max = 72) {
 
   const cut = trimmed.slice(0, max);
   const lastSpace = cut.lastIndexOf(" ");
-  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[,;:]$/, "")}…`;
+  return `${(lastSpace > 0
+    ? cut.slice(0, lastSpace)
+    : cut).replace(/[,;:]$/, "")}…`;
 }
 
 /** Builds the thumbnail used to identify the site owner across cards. */
@@ -71,7 +75,12 @@ function postLine(site: DiscordCardSite, post: CardPost) {
 
 /** A list of markdown rows under a bold label, or nothing at all when there is no row to show. */
 function listBlock(label: string, lines: string[]) {
-  return lines.length ? [h(Separator, { divider: true, spacing: "small" }), h(TextDisplay, null, `**${label}**\n${lines.join("\n")}`)] : [];
+  return lines.length
+    ? [
+        h(Separator, { divider: true, spacing: "small" }),
+        h(TextDisplay, null, `**${label}**\n${lines.join("\n")}`)
+      ]
+    : [];
 }
 
 /** The home page: who RedStar is, what he maintains, and where to find him. */
@@ -81,12 +90,18 @@ export function buildProfileCard(site: DiscordCardSite, page: Pick<IndexCollecti
     { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
-      { accessory: avatar(site) },
+      {
+        accessory: avatar(site)
+      },
       heading(site, site.name, "/", page.description),
       h(TextDisplay, null, `-# ${site.location} · @${site.username}`)
     ),
     ...listBlock("what i've made", projects.slice(0, MAX_EMBED_LIST_ITEMS).map(project => projectLine(site, project))),
-    ...(site.socials.length ? [h(ActionRow, null, socialButtons(site))] : [])
+    ...(site.socials.length
+      ? [
+          h(ActionRow, null, socialButtons(site))
+        ]
+      : [])
   );
 }
 
@@ -97,12 +112,17 @@ export function buildProjectsCard(site: DiscordCardSite, page: CardPage, project
     { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
-      { accessory: avatar(site) },
+      {
+        accessory: avatar(site)
+      },
       heading(site, page.title, page.path, page.description)
     ),
     ...listBlock("the list", projects.slice(0, MAX_EMBED_LIST_ITEMS).map(project => projectLine(site, project))),
     h(ActionRow, null, [
-      h(LinkButton, { url: absolute(site, page.path), label: "all projects" }),
+      h(LinkButton, {
+        url: absolute(site, page.path),
+        label: "all projects"
+      }),
       h(LinkButton, { url: site.url, label: site.name })
     ])
   );
@@ -115,13 +135,21 @@ export function buildWritingCard(site: DiscordCardSite, page: CardPage, posts: C
     { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
-      { accessory: avatar(site) },
+      {
+        accessory: avatar(site)
+      },
       heading(site, page.title, page.path, page.description)
     ),
     ...listBlock("latest", posts.slice(0, MAX_EMBED_LIST_ITEMS).map(post => postLine(site, post))),
     h(ActionRow, null, [
-      h(LinkButton, { url: absolute(site, page.path), label: "all writing" }),
-      h(LinkButton, { url: absolute(site, "/rss.xml"), label: "RSS" })
+      h(LinkButton, {
+        url: absolute(site, page.path),
+        label: "all writing"
+      }),
+      h(LinkButton, {
+        url: absolute(site, "/rss.xml"),
+        label: "RSS"
+      })
     ])
   );
 }
@@ -135,13 +163,23 @@ export function buildPostCard(site: DiscordCardSite, post: CardPost): EmbedEleme
     { accentColor: BRAND_ACCENT_COLOR },
     h(
       Section,
-      { accessory: post.image ? h(Thumbnail, { url: absolute(site, post.image), description: post.title }) : avatar(site) },
+      {
+        accessory: post.image
+          ? h(Thumbnail, {
+              url: absolute(site, post.image),
+              description: post.title
+            })
+          : avatar(site)
+      },
       heading(site, post.title, post.path, post.description),
       h(TextDisplay, null, `-# ${formatDate(post.date)} · ${post.minRead} min read · by ${site.name}`)
     ),
     h(ActionRow, null, [
       h(LinkButton, { url, label: "read the post" }),
-      h(LinkButton, { url: absolute(site, "/rss.xml"), label: "RSS" })
+      h(LinkButton, {
+        url: absolute(site, "/rss.xml"),
+        label: "RSS"
+      })
     ])
   );
 }

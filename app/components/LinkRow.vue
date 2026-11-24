@@ -20,7 +20,7 @@
           class="block truncate text-sm text-muted"
         >{{ description }}</span>
       </span>
-      <slot name="trailing"></slot>
+      <slot name="trailing" />
       <UIcon
         :name="external ? 'i-material-symbols-arrow-outward-rounded' : 'i-material-symbols-chevron-right-rounded'"
         class="size-5 shrink-0 text-muted transition-[translate,color] duration-300 ease-(--ease-spatial) group-hover/row:text-highlighted"

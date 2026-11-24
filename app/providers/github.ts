@@ -7,7 +7,9 @@ export default defineProvider({
   getImage: (src, { modifiers = {} }) => {
     const size = Math.max(Number(modifiers.width) || 0, Number(modifiers.height) || 0);
     return {
-      url: size ? withQuery(src, { s: size }) : src
+      url: size
+        ? withQuery(src, { s: size })
+        : src
     };
   }
 });

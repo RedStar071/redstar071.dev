@@ -15,17 +15,39 @@ const logger = useLogger("sync:standard-site");
 /** The palette from DESIGN.md: night page, pale text, WolfStar red accent. */
 const basicTheme = {
   $type: "site.standard.theme.basic",
-  background: { $type: "site.standard.theme.color#rgb", r: 10, g: 14, b: 18 },
-  foreground: { $type: "site.standard.theme.color#rgb", r: 241, g: 244, b: 247 },
-  accent: { $type: "site.standard.theme.color#rgb", r: 251, g: 44, b: 54 },
-  accentForeground: { $type: "site.standard.theme.color#rgb", r: 21, g: 26, b: 32 }
+  background: {
+    $type: "site.standard.theme.color#rgb",
+    r: 10,
+    g: 14,
+    b: 18
+  },
+  foreground: {
+    $type: "site.standard.theme.color#rgb",
+    r: 241,
+    g: 244,
+    b: 247
+  },
+  accent: {
+    $type: "site.standard.theme.color#rgb",
+    r: 251,
+    g: 44,
+    b: 54
+  },
+  accentForeground: {
+    $type: "site.standard.theme.color#rgb",
+    r: 21,
+    g: 26,
+    b: 32
+  }
 } satisfies site.standard.theme.basic.Main;
 
 const indexPath = fileURLToPath(new URL("../../../content/index.yml", import.meta.url));
 
 async function siteDescription(): Promise<string | undefined> {
   const { description } = parse(await readFile(indexPath, "utf8")) as { description?: unknown };
-  return typeof description === "string" ? description : undefined;
+  return typeof description === "string"
+    ? description
+    : undefined;
 }
 
 /**
@@ -61,7 +83,9 @@ export class StandardSiteProvider implements SyncProvider {
         basicTheme
       }, { ifChanged: true });
     } catch (error) {
-      logger.warn("Failed to update publication record:", error instanceof Error ? error.message : error);
+      logger.warn("Failed to update publication record:", error instanceof Error
+        ? error.message
+        : error);
     }
 
     const expectedRkeys = new Set(posts.map(post => documentRkey(post)));
@@ -75,7 +99,9 @@ export class StandardSiteProvider implements SyncProvider {
         }
       }
     } catch (error) {
-      logger.warn("Failed to clean up stale records:", error instanceof Error ? error.message : error);
+      logger.warn("Failed to clean up stale records:", error instanceof Error
+        ? error.message
+        : error);
     }
 
     let updated = 0;
@@ -107,7 +133,10 @@ export class StandardSiteProvider implements SyncProvider {
 async function discoverAnnouncements(posts: SyncPost[], { dryRun }: SyncOptions): Promise<void> {
   for (const post of posts.filter(post => !post.bluesky)) {
     try {
-      const uri = await findAnnouncement({ url: `${SITE_URL}/blog/${post.slug}`, publishedAt: new Date(post.date) });
+      const uri = await findAnnouncement({
+        url: `${SITE_URL}/blog/${post.slug}`,
+        publishedAt: new Date(post.date)
+      });
       if (!uri) {
         continue;
       }
@@ -117,7 +146,9 @@ async function discoverAnnouncements(posts: SyncPost[], { dryRun }: SyncOptions)
         await persistAnnouncement(post.file, uri);
       }
     } catch (error) {
-      logger.warn(`Failed to look up a Bluesky announcement for ${post.slug}:`, error instanceof Error ? error.message : error);
+      logger.warn(`Failed to look up a Bluesky announcement for ${post.slug}:`, error instanceof Error
+        ? error.message
+        : error);
     }
   }
 }
@@ -134,7 +165,9 @@ async function resolveBskyPostRef(airspace: BuildAirspace, uri: string | undefin
       return { uri: post.uri, cid: post.cid };
     }
   } catch (error) {
-    logger.warn(`Failed to resolve Bluesky post ${uri}:`, error instanceof Error ? error.message : error);
+    logger.warn(`Failed to resolve Bluesky post ${uri}:`, error instanceof Error
+      ? error.message
+      : error);
   }
   return undefined;
 }

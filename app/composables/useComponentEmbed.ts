@@ -40,12 +40,14 @@ export function useComponentEmbed(build: (site: DiscordCardSite) => EmbedElement
 
   useHead(() => ({
     script: json.value
-      ? [{
-          id: COMPONENT_EMBED_SCRIPT_ID,
-          type: "application/json",
-          innerHTML: json.value,
-          tagPosition: "head"
-        }]
+      ? [
+          {
+            id: COMPONENT_EMBED_SCRIPT_ID,
+            type: "application/json",
+            innerHTML: json.value,
+            tagPosition: "head"
+          }
+        ]
       : []
   }));
 }

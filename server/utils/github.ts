@@ -87,7 +87,10 @@ async function queryGitHub<T>(event: H3Event, query: string): Promise<T | null> 
       "authorization": `Bearer ${config.githubToken}`,
       "user-agent": "redstar071.dev"
     },
-    body: { query, variables: { login: config.public.githubUsername } },
+    body: {
+      query,
+      variables: { login: config.public.githubUsername }
+    },
     timeout: 8_000
   }).then(data => data as T, () => null);
 }
@@ -126,7 +129,9 @@ export const fetchGitHubStats = defineCachedFunction(async (event: H3Event): Pro
     followers: user.followers.totalCount,
     repositories: user.repositories.totalCount,
     contributionYears: user.contributionsCollection.contributionYears,
-    languages: [...languages.values()].sort((a, b) => b.size - a.size)
+    languages: [
+      ...languages.values()
+    ].sort((a, b) => b.size - a.size)
   };
 }, {
   name: "github-stats",
@@ -213,7 +218,9 @@ export function computeStreaks(days: Array<{ date: string; count: number }>, tod
       const date = past[index]!.date;
       if (current.length && !follows(current.start, date))
         break;
-      current = current.length ? { length: current.length + 1, start: date, end: current.end } : { length: 1, start: date, end: date };
+      current = current.length
+        ? { length: current.length + 1, start: date, end: current.end }
+        : { length: 1, start: date, end: date };
     }
   }
 

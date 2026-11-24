@@ -63,7 +63,11 @@ export const MONO = { fontFamily: "Google Sans Code", fontWeight: 400 } as const
 let fonts: ReturnType<typeof googleFonts> | undefined;
 function loadFonts() {
   fonts ??= googleFonts([
-    { name: "Google Sans Flex", weight: 900, axes: { ROND: 100 } },
+    {
+      name: "Google Sans Flex",
+      weight: 900,
+      axes: { ROND: 100 }
+    },
     { name: "Google Sans Flex", weight: 500 },
     { name: "Google Sans Code", weight: 400 }
   ]).catch((error) => {
@@ -79,7 +83,17 @@ function svgImage(body: string, viewBox = "0 0 100 100") {
 }
 
 function icon(src: string, size: number, style: Record<string, unknown> = {}) {
-  return image({ src, width: size, height: size, style: { width: size, height: size, flexShrink: 0, ...style } });
+  return image({
+    src,
+    width: size,
+    height: size,
+    style: {
+      width: size,
+      height: size,
+      flexShrink: 0,
+      ...style
+    }
+  });
 }
 
 /** The chubby sticker star from around the avatar, red-300 with a red-500 outline in both themes. */
@@ -120,9 +134,21 @@ function shapeBadge(palette: CardPalette, shape: CardShape, glyph: CardIcon, ton
  */
 export function rowList(palette: CardPalette, rows: Node[][], direction: "row" | "column", style: Record<string, unknown> = {}) {
   return container({
-    style: { display: "flex", flexDirection: direction, gap: 2, borderRadius: 16, overflow: "hidden", ...style },
+    style: {
+      display: "flex",
+      flexDirection: direction,
+      gap: 2,
+      borderRadius: 16,
+      overflow: "hidden",
+      ...style
+    },
     children: rows.map(children => container({
-      style: { display: "flex", flex: 1, backgroundColor: palette.row, borderRadius: 4 },
+      style: {
+        display: "flex",
+        flex: 1,
+        backgroundColor: palette.row,
+        borderRadius: 4
+      },
       children
     }))
   });
@@ -151,10 +177,20 @@ export function cardFrame(palette: CardPalette, header: CardHeader, body: Node[]
     },
     children: [
       container({
-        style: { display: "flex", alignItems: "center", gap: 12, marginBottom: 14 },
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 14
+        },
         children: [
           shapeBadge(palette, header.shape, header.icon, header.tone ?? "tonal"),
-          text(header.title, { flex: 1, fontSize: 22, color: palette.highlight, letterSpacing: "-0.02em" }),
+          text(header.title, {
+            flex: 1,
+            fontSize: 22,
+            color: palette.highlight,
+            letterSpacing: "-0.02em"
+          }),
           stickerStar(30)
         ]
       }),
@@ -166,7 +202,11 @@ export function cardFrame(palette: CardPalette, header: CardHeader, body: Node[]
 /** A card for when there is nothing to draw, so the README shows a message rather than a broken image. */
 export function messageCard(header: CardHeader, message: string) {
   return (palette: CardPalette) => cardFrame(palette, header, [
-    rowList(palette, [[text(message, { padding: "10px 16px", fontSize: 14 })]], "column")
+    rowList(palette, [
+      [
+        text(message, { padding: "10px 16px", fontSize: 14 })
+      ]
+    ], "column")
   ]);
 }
 
@@ -190,7 +230,9 @@ function svgBody(svg: string) {
  */
 export async function renderCard(build: (palette: CardPalette) => Node, width: number, theme: CardTheme, label: string) {
   const options = { width, fonts: await loadFonts() };
-  const themes = theme === "auto" ? (["dark", "light"] as const) : [theme];
+  const themes = theme === "auto"
+    ? (["dark", "light"] as const)
+    : [theme];
   const renders = await Promise.all(themes.map(name => renderSvg(build(CARD_PALETTES[name]), options)));
   const height = Number(renders[0]!.match(/\bheight="([\d.]+)"/)?.[1]) || 0;
   const bodies = renders.map((svg, index) => {

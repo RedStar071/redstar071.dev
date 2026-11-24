@@ -19,7 +19,11 @@ export default withNuxt(
       },
       rules: {
         "style/comma-dangle": ["error", "never"],
-        "style/brace-style": ["error", "1tbs", { allowSingleLine: true }]
+        "style/brace-style": [
+          "error",
+          "1tbs",
+          { allowSingleLine: true }
+        ]
       }
     }
   )
