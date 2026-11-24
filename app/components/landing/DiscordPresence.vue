@@ -225,10 +225,14 @@ const activityVerbs: Record<LanyardActivity["type"], string> = {
   5: "competing in"
 };
 
-const spotifyUrl = computed(() => presence.value?.spotify?.track_id ? `${SPOTIFY_URL}/track/${presence.value.spotify.track_id}` : SPOTIFY_URL);
+const spotifyUrl = computed(() => presence.value?.spotify?.track_id
+  ? `${SPOTIFY_URL}/track/${presence.value.spotify.track_id}`
+  : SPOTIFY_URL);
 const spotifyDuration = computed(() => {
   const timestamps = presence.value?.spotify?.timestamps;
-  return timestamps ? timestamps.end - timestamps.start : 0;
+  return timestamps
+    ? timestamps.end - timestamps.start
+    : 0;
 });
 const spotifyElapsed = computed(() => {
   const timestamps = presence.value?.spotify?.timestamps;
@@ -236,7 +240,9 @@ const spotifyElapsed = computed(() => {
     return 0;
   return Math.min(Math.max(now.value.getTime() - timestamps.start, 0), spotifyDuration.value);
 });
-const spotifyProgress = computed(() => spotifyDuration.value ? spotifyElapsed.value / spotifyDuration.value : 0);
+const spotifyProgress = computed(() => spotifyDuration.value
+  ? spotifyElapsed.value / spotifyDuration.value
+  : 0);
 
 function formatClock(ms: number) {
   const seconds = Math.floor(ms / 1000);

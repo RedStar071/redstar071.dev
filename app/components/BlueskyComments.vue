@@ -76,7 +76,9 @@ const { data, status, error, refresh } = useFetch<BlueskyThread>("https://public
   lazy: true
 });
 
-const replies = computed(() => data.value && isThreadPost(data.value.thread) ? sortedReplies(data.value.thread.replies) : []);
+const replies = computed(() => data.value && isThreadPost(data.value.thread)
+  ? sortedReplies(data.value.thread.replies)
+  : []);
 
 const threadUrl = computed(() => {
   const [did, , rkey] = uri.replace("at://", "").split("/");

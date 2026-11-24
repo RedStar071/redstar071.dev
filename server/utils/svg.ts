@@ -19,7 +19,9 @@ export function escapeXml(value: string) {
 /** `?theme=dark|light` pins a card's colours; anything else follows the reader's theme. */
 export function getCardTheme(event: H3Event): CardTheme {
   const { theme } = getQuery(event);
-  return theme === "dark" || theme === "light" ? theme : "auto";
+  return theme === "dark" || theme === "light"
+    ? theme
+    : "auto";
 }
 
 /** A drawn card, and how long GitHub's image proxy and browsers may keep it. */
@@ -108,7 +110,9 @@ export async function serveCard(
   // Outside Cloudflare there is nowhere to keep a card for the next request: just draw it.
   if (!cache) {
     const card = await redraw();
-    return card ? sendSvg(event, card.svg, card.maxAge) : sendSvg(event, await drawPlaceholder(false), 300);
+    return card
+      ? sendSvg(event, card.svg, card.maxAge)
+      : sendSvg(event, await drawPlaceholder(false), 300);
   }
 
   const hit = await cache.match(new Request(key)).catch(() => undefined);

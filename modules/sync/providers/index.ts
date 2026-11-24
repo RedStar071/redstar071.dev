@@ -47,7 +47,9 @@ export async function syncAll(content: SyncContent, options: SyncOptions): Promi
     try {
       await provider.sync(content, options);
     } catch (error) {
-      console.warn(`[sync:${provider.name}] Failed:`, error instanceof Error ? error.message : error);
+      console.warn(`[sync:${provider.name}] Failed:`, error instanceof Error
+        ? error.message
+        : error);
     }
   }));
 }

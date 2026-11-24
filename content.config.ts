@@ -66,7 +66,9 @@ function loadProjects() {
       }
       console.info("[projects] no records in the PDS yet, using content/projects/*.yml");
     } catch (error) {
-      console.warn(`[projects] could not read the PDS (${error instanceof Error ? error.message : error}), using content/projects/*.yml`);
+      console.warn(`[projects] could not read the PDS (${error instanceof Error
+        ? error.message
+        : error}), using content/projects/*.yml`);
     }
     return readProjectFiles();
   })();
@@ -74,7 +76,9 @@ function loadProjects() {
 }
 
 const projectsSource = defineCollectionSource({
-  getKeys: async () => [...(await loadProjects()).keys()].map(rkey => `${rkey}.json`),
+  getKeys: async () => [
+    ...(await loadProjects()).keys()
+  ].map(rkey => `${rkey}.json`),
   getItem: async (key) => {
     const project = (await loadProjects()).get(key.replace(/\.json$/, ""));
     if (!project) {

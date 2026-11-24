@@ -3,7 +3,11 @@ import lexicons from "../lexicons.ts";
 import { site } from "./lex/index.ts";
 
 export const { project: projects } = defineCollections(lexicons, {
-  project: { sort: [["order", "asc"]] }
+  project: {
+    sort: [
+      ["order", "asc"]
+    ]
+  }
 });
 
 /** The standard.site records the blog is published as, from `lexicons/site` (`pnpm lex:gen`). */

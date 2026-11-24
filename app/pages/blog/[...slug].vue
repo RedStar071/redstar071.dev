@@ -94,12 +94,17 @@ useSeoMeta({
 // Points standard.site readers at this post's `site.standard.document` record,
 // which the sync module (`modules/sync`) writes under the same key on deploy.
 useHead({
-  link: [{
+  link: [
+    {
     // Unhead only types the standard `rel` values, and this one is standard.site's own.
     // @ts-expect-error custom rel
-    rel: "site.standard.document",
-    href: documentUri({ date: page.value.date, slug: routePath.value.split("/").pop()! })
-  }]
+      rel: "site.standard.document",
+      href: documentUri({
+        date: page.value.date,
+        slug: routePath.value.split("/").pop()!
+      })
+    }
+  ]
 });
 
 defineOgImage("Profile", { title, description });

@@ -17,7 +17,9 @@
 const colorMode = useColorMode();
 const reducedMotion = usePreferredReducedMotion();
 
-const nextTheme = computed(() => (colorMode.value === "dark" ? "light" : "dark"));
+const nextTheme = computed(() => (colorMode.value === "dark"
+  ? "light"
+  : "dark"));
 
 function switchTheme() {
   colorMode.preference = nextTheme.value;

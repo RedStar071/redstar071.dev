@@ -37,7 +37,11 @@ export async function useBuildAirspaceWithSession() {
     throw new Error(`Logged in as ${session.did}, but the site is configured for ${ATPROTO_DID}.`);
   }
 
-  return createAirspace({ identity: { did, service }, collections, session });
+  return createAirspace({
+    identity: { did, service },
+    collections,
+    session
+  });
 }
 
 export type BuildAirspace = Awaited<ReturnType<typeof useBuildAirspaceWithSession>>;

@@ -63,14 +63,20 @@ export default defineNuxtConfig({
     // The README cards render with Takumi, whose Workers build imports its WebAssembly as a
     // module: Nitro v3 bundles WebAssembly by default, so it needs no flag.
     rolldownConfig: {
-      plugins: [{
+      plugins: [
+        {
         // Takumi imports React on demand, only to render JSX components with hooks. The README
         // cards are plain node trees and the Worker bundle cannot leave an import unresolved,
         // so React resolves to an empty module, which Takumi reads as "not installed".
-        name: "takumi-without-react",
-        resolveId: id => (id === "react" ? "\0react-stub" : null),
-        load: id => (id === "\0react-stub" ? "export default {};" : null)
-      }]
+          name: "takumi-without-react",
+          resolveId: id => (id === "react"
+            ? "\0react-stub"
+            : null),
+          load: id => (id === "\0react-stub"
+            ? "export default {};"
+            : null)
+        }
+      ]
     },
     prerender: {
       routes: [
@@ -109,13 +115,25 @@ export default defineNuxtConfig({
 
   fonts: {
     families: [
-      { name: "Google Sans Flex", provider: "google", weights: ["300 900"] },
-      { name: "Google Sans Code", provider: "google", weights: ["400 600"] }
+      {
+        name: "Google Sans Flex",
+        provider: "google",
+        weights: ["300 900"]
+      },
+      {
+        name: "Google Sans Code",
+        provider: "google",
+        weights: ["400 600"]
+      }
     ],
     google: {
       experimental: {
         variableAxis: {
-          "Google Sans Flex": { ROND: [["0", "100"]] }
+          "Google Sans Flex": {
+            ROND: [
+              ["0", "100"]
+            ]
+          }
         }
       }
     }

@@ -22,4 +22,10 @@ import { ATPROTO_HANDLE } from "../shared/atproto.ts";
 // `ATPROTO_APP_PASSWORD`, so one .env entry serves both.
 process.env.AIRSPACE_APP_PASSWORD ||= process.env.ATPROTO_APP_PASSWORD;
 
-process.exitCode = await main(["lexicons", "publish", "--identity", ATPROTO_HANDLE, ...process.argv.slice(2)]);
+process.exitCode = await main([
+  "lexicons",
+  "publish",
+  "--identity",
+  ATPROTO_HANDLE,
+  ...process.argv.slice(2)
+]);

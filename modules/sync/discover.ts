@@ -38,7 +38,9 @@ function linksOf({ post }: FeedItem): string[] {
     .filter(feature => feature.$type === "app.bsky.richtext.facet#link" && feature.uri)
     .map(feature => feature.uri!) ?? [];
   const card = post.embed?.external?.uri ?? post.record.embed?.external?.uri;
-  return card ? [...links, card] : links;
+  return card
+    ? [...links, card]
+    : links;
 }
 
 export async function findAnnouncement(options: { url: string; publishedAt: Date; actor?: string }): Promise<string | undefined> {
@@ -58,7 +60,9 @@ export async function findAnnouncement(options: { url: string; publishedAt: Date
       feedUrl.searchParams.set("cursor", cursor);
     }
 
-    const response = await fetch(feedUrl, { signal: AbortSignal.timeout(10_000) });
+    const response = await fetch(feedUrl, {
+      signal: AbortSignal.timeout(10_000)
+    });
     if (!response.ok) {
       throw new Error(`getAuthorFeed answered ${response.status}`);
     }

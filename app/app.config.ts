@@ -7,42 +7,50 @@ export default defineAppConfig({
     email: "redstar071@proton.me",
     discordId: "605162125027049472"
   },
-  socials: [{
-    label: "GitHub",
-    handle: "RedStar071",
-    icon: "i-simple-icons-github",
-    to: "https://github.com/RedStar071"
-  }, {
-    label: "Discord",
-    handle: "redstar071",
-    icon: "i-simple-icons-discord",
-    to: "https://discord.com/users/605162125027049472"
-  }, {
-    label: "X",
-    handle: "@redstar071",
-    icon: "i-simple-icons-x",
-    to: "https://x.com/redstar071"
-  }, {
-    label: "Bluesky",
-    handle: "redstar071.dev",
-    icon: "i-simple-icons-bluesky",
-    to: "https://bsky.app/profile/redstar071.dev"
-  }, {
-    label: "Telegram",
-    handle: "redstar071",
-    icon: "i-simple-icons-telegram",
-    to: "https://t.me/redstar071"
-  }, {
-    label: "Instagram",
-    handle: "redstar071",
-    icon: "i-simple-icons-instagram",
-    to: "https://instagram.com/redstar071"
-  }, {
-    label: "GitHub Sponsors",
-    handle: "sponsor my work",
-    icon: "i-simple-icons-githubsponsors",
-    to: "https://github.com/sponsors/RedStar071"
-  }],
+  socials: [
+    {
+      label: "GitHub",
+      handle: "RedStar071",
+      icon: "i-simple-icons-github",
+      to: "https://github.com/RedStar071"
+    },
+    {
+      label: "Discord",
+      handle: "redstar071",
+      icon: "i-simple-icons-discord",
+      to: "https://discord.com/users/605162125027049472"
+    },
+    {
+      label: "X",
+      handle: "@redstar071",
+      icon: "i-simple-icons-x",
+      to: "https://x.com/redstar071"
+    },
+    {
+      label: "Bluesky",
+      handle: "redstar071.dev",
+      icon: "i-simple-icons-bluesky",
+      to: "https://bsky.app/profile/redstar071.dev"
+    },
+    {
+      label: "Telegram",
+      handle: "redstar071",
+      icon: "i-simple-icons-telegram",
+      to: "https://t.me/redstar071"
+    },
+    {
+      label: "Instagram",
+      handle: "redstar071",
+      icon: "i-simple-icons-instagram",
+      to: "https://instagram.com/redstar071"
+    },
+    {
+      label: "GitHub Sponsors",
+      handle: "sponsor my work",
+      icon: "i-simple-icons-githubsponsors",
+      to: "https://github.com/sponsors/RedStar071"
+    }
+  ],
   ui: {
     colors: {
       primary: "red",
@@ -95,12 +103,14 @@ export default defineAppConfig({
       slots: {
         base: "rounded-full transition-[background-color,color,border-radius,scale] duration-200 ease-(--ease-effects) active:scale-[0.97] active:rounded-md"
       },
-      compoundVariants: [{
+      compoundVariants: [
+        {
         // Dark mode keeps red-400 for primary text, but filled surfaces use the full brand red (red-500 ≈ #FD171B).
-        color: "primary",
-        variant: "solid",
-        class: "dark:bg-primary-500 dark:hover:bg-primary-500/80 dark:active:bg-primary-500/80 dark:disabled:bg-primary-500 dark:aria-disabled:bg-primary-500"
-      }]
+          color: "primary",
+          variant: "solid",
+          class: "dark:bg-primary-500 dark:hover:bg-primary-500/80 dark:active:bg-primary-500/80 dark:disabled:bg-primary-500 dark:aria-disabled:bg-primary-500"
+        }
+      ]
     },
     tooltip: {
       slots: {

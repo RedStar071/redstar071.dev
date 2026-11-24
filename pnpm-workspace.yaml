@@ -1,3 +1,4 @@
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - "@nuxt/kit@4.7.0"
   - "@nuxt/nitro-server@4.7.0"
@@ -9,13 +10,14 @@ minimumReleaseAgeExclude:
   - nuxt@4.7.0
   - nuxt-og-image@7.2.0
   - "@nuxt/ui@4.13.1"
-shellEmulator: true
 
 trustPolicy: no-downgrade
 
 # Legacy 6.x line (pulled in by Babel) predates npm provenance.
 trustPolicyExclude:
   - semver@6.3.1
+
+shellEmulator: true
 
 allowBuilds:
   "@parcel/watcher": false

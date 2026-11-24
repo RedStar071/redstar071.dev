@@ -1,8 +1,8 @@
 import type { H3Event } from "nitro/h3";
-import { SPOTIFY_USER_ID } from "#shared/utils/spotify";
 import { defineCachedFunction } from "nitro/cache";
 import { useRuntimeConfig } from "nuxt/server";
 import { $fetch } from "ofetch";
+import { SPOTIFY_USER_ID } from "#shared/utils/spotify";
 
 /** One track, as Last.fm reports it. */
 export interface Track {
@@ -52,7 +52,9 @@ export async function fetchLastFmTrack(): Promise<Track | null> {
       timeout: MUSIC_TIMEOUT
     });
     const tracks = response.recenttracks?.track;
-    const track = Array.isArray(tracks) ? tracks[0] : tracks;
+    const track = Array.isArray(tracks)
+      ? tracks[0]
+      : tracks;
     if (!track || response.error)
       return null;
 
@@ -67,7 +69,9 @@ export async function fetchLastFmTrack(): Promise<Track | null> {
       image,
       url: track.url,
       isNowPlaying: track["@attr"]?.nowplaying === "true",
-      playedAt: track.date?.uts ? Number(track.date.uts) * 1000 : null,
+      playedAt: track.date?.uts
+        ? Number(track.date.uts) * 1000
+        : null,
       source: "lastfm"
     };
   } catch {
@@ -157,14 +161,21 @@ async function fetchSpotifyApiRecent(token: string, limit: number): Promise<Spot
     const [current, recent] = await Promise.all([
       // The now-playing lookup is optional: if it fails, the history below still shows.
       $fetch<SpotifyCurrentlyPlaying | undefined>("https://api.spotify.com/v1/me/player/currently-playing", { headers, timeout: MUSIC_TIMEOUT }).catch(() => undefined),
-      $fetch<SpotifyRecentlyPlayed>("https://api.spotify.com/v1/me/player/recently-played", { headers, query: { limit }, timeout: MUSIC_TIMEOUT })
+      $fetch<SpotifyRecentlyPlayed>("https://api.spotify.com/v1/me/player/recently-played", {
+        headers,
+        query: { limit },
+        timeout: MUSIC_TIMEOUT
+      })
     ]);
 
     const tracks = recent.items.map(item => toSpotifyTrack(item.track, false, Date.parse(item.played_at)));
     if (current?.is_playing && current.currently_playing_type === "track" && current.item) {
       // The track playing now is often also the latest history entry: show it once, on top.
       const nowPlaying = toSpotifyTrack(current.item, true, null);
-      return [nowPlaying, ...tracks.filter(track => track.url !== nowPlaying.url)].slice(0, limit);
+      return [
+        nowPlaying,
+        ...tracks.filter(track => track.url !== nowPlaying.url)
+      ].slice(0, limit);
     }
     return tracks;
   } catch {
@@ -175,12 +186,21 @@ async function fetchSpotifyApiRecent(token: string, limit: number): Promise<Spot
 /** The public card the profile README shows; the service holds its own sign-in to the account. */
 const SPOTIFY_CARD_URL = "https://spotify-recently-played-readme.vercel.app/api";
 
-const XML_ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: "\"", apos: "'" };
+const XML_ENTITIES: Record<string, string> = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: "\"",
+  apos: "'"
+};
 
 function decodeXml(value: string) {
   return value.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (entity, code: string) => {
-    if (code[0] === "#")
-      return String.fromCodePoint(code[1] === "x" || code[1] === "X" ? Number.parseInt(code.slice(2), 16) : Number(code.slice(1)));
+    if (code[0] === "#") {
+      return String.fromCodePoint(code[1] === "x" || code[1] === "X"
+        ? Number.parseInt(code.slice(2), 16)
+        : Number(code.slice(1)));
+    }
     return XML_ENTITIES[code.toLowerCase()] ?? entity;
   });
 }
@@ -201,7 +221,9 @@ export function parseSpotifyCard(svg: string, limit: number): SpotifyTrack[] {
     const artist = lines.find(line => line.startsWith("by "))?.slice(3) ?? "";
     const album = lines.find(line => line.startsWith("from "))?.slice(5) || null;
     const played = block.match(/<title>Played ([^<]+?) at (\d{1,2}:\d{2}) UTC<\/title>/);
-    const playedAt = played ? Date.parse(`${played[1]} ${played[2]} UTC`) : Number.NaN;
+    const playedAt = played
+      ? Date.parse(`${played[1]} ${played[2]} UTC`)
+      : Number.NaN;
 
     tracks.push({
       title: lines[0],
@@ -211,7 +233,9 @@ export function parseSpotifyCard(svg: string, limit: number): SpotifyTrack[] {
       url: decodeXml(url),
       // No played time means it has not finished: the card is showing it as playing now.
       isNowPlaying: !played,
-      playedAt: Number.isNaN(playedAt) ? null : playedAt
+      playedAt: Number.isNaN(playedAt)
+        ? null
+        : playedAt
     });
     if (tracks.length >= limit)
       break;
@@ -240,6 +264,10 @@ async function fetchSpotifyCardRecent(limit: number): Promise<SpotifyTrack[]> {
  */
 export async function fetchSpotifyRecent(event: H3Event, limit = 5): Promise<SpotifyTrack[]> {
   const token = await getSpotifyAccessToken(event);
-  const tracks = token ? await fetchSpotifyApiRecent(token, limit) : [];
-  return tracks.length ? tracks : await fetchSpotifyCardRecent(limit);
+  const tracks = token
+    ? await fetchSpotifyApiRecent(token, limit)
+    : [];
+  return tracks.length
+    ? tracks
+    : await fetchSpotifyCardRecent(limit);
 }

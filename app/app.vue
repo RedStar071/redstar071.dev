@@ -21,7 +21,9 @@ const colorMode = useColorMode();
 const { global, socials } = useAppConfig();
 
 // Matches --ui-bg: night-950 in dark mode, night-100 in light mode.
-const color = computed(() => colorMode.value === "dark" ? "#0a0e12" : "#f1f4f7");
+const color = computed(() => colorMode.value === "dark"
+  ? "#0a0e12"
+  : "#f1f4f7");
 
 useHead({
   meta: [
@@ -31,7 +33,12 @@ useHead({
   ],
   link: [
     { rel: "icon", href: "/favicon.ico" },
-    { rel: "alternate", type: "application/rss+xml", title: global.name, href: "/rss.xml" }
+    {
+      rel: "alternate",
+      type: "application/rss+xml",
+      title: global.name,
+      href: "/rss.xml"
+    }
   ],
   htmlAttrs: {
     lang: "en"
@@ -55,7 +62,18 @@ if (import.meta.server) {
       description: "I'm RedStar, a developer from Italy. I maintain WolfStar, a Discord moderation bot, and build open-source TypeScript tooling for Discord apps and the web.",
       sameAs: socials.filter(social => social.to.startsWith("https://")).map(social => social.to),
       email: `mailto:${global.email}`,
-      knowsAbout: ["TypeScript", "Vue", "Nuxt", "Node.js", "discord.js", "Tailwind CSS", "Docker", "Kubernetes", "PostgreSQL", "Cloudflare"],
+      knowsAbout: [
+        "TypeScript",
+        "Vue",
+        "Nuxt",
+        "Node.js",
+        "discord.js",
+        "Tailwind CSS",
+        "Docker",
+        "Kubernetes",
+        "PostgreSQL",
+        "Cloudflare"
+      ],
       homeLocation: {
         "@type": "Place",
         "name": global.location,

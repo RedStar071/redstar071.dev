@@ -9,7 +9,12 @@ import { defineNuxtModule, useNuxt } from "nuxt/kit";
 import { joinURL } from "ufo";
 
 /** Prerendered as HTML, but not pages a reader or a crawler should land on. */
-const EXCLUDED_ROUTES = new Set(["/200", "/404", "/200.html", "/404.html"]);
+const EXCLUDED_ROUTES = new Set([
+  "/200",
+  "/404",
+  "/200.html",
+  "/404.html"
+]);
 
 export default defineNuxtModule({
   meta: { name: "sitemap" },
