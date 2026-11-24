@@ -1,5 +1,6 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import type { CardTheme } from "./card";
+import { getQuery, getRequestURL } from "nuxt/server";
 
 /**
  * Serving the README cards (drawn in `card.ts`): GitHub proxies README images through camo,
@@ -135,12 +136,10 @@ export async function serveCard(
 
 /** Sends a card; `maxAge` is how long GitHub's image proxy and browsers may keep it. */
 export function sendSvg(event: H3Event, svg: string, maxAge: number) {
-  setResponseHeaders(event, {
-    "content-type": "image/svg+xml; charset=utf-8",
-    "cache-control": maxAge > 0
-      ? `public, max-age=${maxAge}, s-maxage=${maxAge}, stale-while-revalidate=${maxAge}`
-      : "no-cache, no-store, must-revalidate"
-  });
+  event.res.headers.set("content-type", "image/svg+xml; charset=utf-8");
+  event.res.headers.set("cache-control", maxAge > 0
+    ? `public, max-age=${maxAge}, s-maxage=${maxAge}, stale-while-revalidate=${maxAge}`
+    : "no-cache, no-store, must-revalidate");
   return svg;
 }
 

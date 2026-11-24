@@ -1,14 +1,14 @@
 import type { l } from "@atproto/lex-schema";
 import type { site } from "../../../shared/lex/index.ts";
-import type { BuildAirspace } from "../../shared/airspace";
-import type { SyncContent, SyncOptions, SyncPost, SyncProvider } from "./index";
+import type { BuildAirspace } from "../../shared/airspace.ts";
+import type { SyncContent, SyncOptions, SyncPost, SyncProvider } from "./index.ts";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { useLogger } from "nuxt/kit";
 import { parse } from "yaml";
-import { ATPROTO_DID, documentRkey, PUBLICATION_RKEY, PUBLICATION_URI, SITE_URL } from "../../../shared/atproto";
-import { useBuildAirspaceWithSession } from "../../shared/airspace";
-import { findAnnouncement, persistAnnouncement } from "../discover";
+import { ATPROTO_DID, documentRkey, PUBLICATION_RKEY, PUBLICATION_URI, SITE_URL } from "../../../shared/atproto.ts";
+import { useBuildAirspaceWithSession } from "../../shared/airspace.ts";
+import { findAnnouncement, persistAnnouncement } from "../discover.ts";
 
 const logger = useLogger("sync:standard-site");
 

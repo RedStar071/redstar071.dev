@@ -60,11 +60,9 @@ export default defineNuxtConfig({
     // Every page is still prerendered and served as a static asset; the Worker only
     // answers what has to be live: /api/* and the README cards under /readme/*.
     preset: "cloudflare-module",
-    // The README cards render with Takumi, whose Workers build imports its WebAssembly as a module.
-    experimental: {
-      wasm: true
-    },
-    rollupConfig: {
+    // The README cards render with Takumi, whose Workers build imports its WebAssembly as a
+    // module: Nitro v3 bundles WebAssembly by default, so it needs no flag.
+    rolldownConfig: {
       plugins: [{
         // Takumi imports React on demand, only to render JSX components with hooks. The README
         // cards are plain node trees and the Worker bundle cannot leave an import unresolved,
@@ -83,7 +81,19 @@ export default defineNuxtConfig({
         "/200.html",
         "/404.html"
       ],
-      crawlLinks: true
+      crawlLinks: true,
+      // @nuxt/content's Cloudflare dump handler reads `/dump.<collection>.sql` through the ASSETS
+      // binding, or else through serverFetch, which the Nitro v3 prerenderer does not answer from
+      // public assets. Left to the Worker, the dumps are read from the ASSETS binding at runtime.
+      ignore: ["/__nuxt_content/"]
+    }
+  },
+
+  typescript: {
+    serverTsConfig: {
+      // @nuxt/content adds its collection types through `nitro.typescript.tsConfig`, which the
+      // Nitro v3 server builder does not read yet, so `queryCollection` in server code sees none.
+      include: ["./content/types.d.ts"]
     }
   },
 

@@ -1,8 +1,9 @@
 import { queryCollection } from "@nuxt/content/server";
+import { defineHandler } from "nitro/h3";
 import { joinURL } from "ufo";
 
 /** The blog as an RSS 2.0 feed, prerendered to `/rss.xml`. */
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const site = getSiteConfig(event);
   const posts = await queryCollection(event, "blog").order("date", "DESC").all();
 
@@ -16,12 +17,12 @@ export default defineEventHandler(async (event) => {
     "</item>"
   ].join(""));
 
-  setResponseHeader(event, "content-type", "application/rss+xml; charset=utf-8");
+  event.res.headers.set("content-type", "application/rss+xml; charset=utf-8");
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
     `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">`,
     "<channel>",
-    `<title>${escapeXml(site.name)}</title>`,
+    `<title>${escapeXml(site.name ?? "RedStar")}</title>`,
     `<link>${site.url}</link>`,
     `<description>${escapeXml("Notes on Discord bots, Nuxt and the tools I build.")}</description>`,
     `<atom:link href="${joinURL(site.url, "rss.xml")}" rel="self" type="application/rss+xml" />`,

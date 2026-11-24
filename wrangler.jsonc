@@ -7,11 +7,13 @@
   "main": ".output/server/index.mjs",
   // Pages are prerendered and served straight from the assets; only the live
   // routes run the Worker, so nothing else ever needs Nuxt Content's database.
+  // The /__nuxt_content/* dumps the browser reads are not prerendered under Nitro v3
+  // (see nuxt.config.ts): the Worker answers them from `dump.*.sql` in the assets.
   "assets": {
     "directory": ".output/public",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/readme/*"]
+    "run_worker_first": ["/api/*", "/readme/*", "/__nuxt_content/*"]
   },
   // `wrangler preview` (the Workers Builds deploy step for branches) refuses to run without this
   // block. The Worker reads no variables at runtime, so there is nothing to put in it: the

@@ -1,4 +1,7 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
+import { defineCachedFunction } from "nitro/cache";
+import { useRuntimeConfig } from "nuxt/server";
+import { $fetch } from "ofetch";
 
 export interface GitHubLanguage {
   name: string;
@@ -77,7 +80,7 @@ const STATS_QUERY = /* GraphQL */ `
 
 /** One GraphQL call as the configured user; null when it fails. */
 async function queryGitHub<T>(event: H3Event, query: string): Promise<T | null> {
-  const config = useRuntimeConfig(event);
+  const config = useRuntimeConfig();
   return await $fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
@@ -94,7 +97,7 @@ async function queryGitHub<T>(event: H3Event, query: string): Promise<T | null> 
  * no extra permissions reads public data. Cached for an hour, so a busy README costs one call.
  */
 export const fetchGitHubStats = defineCachedFunction(async (event: H3Event): Promise<GitHubStats | null> => {
-  const config = useRuntimeConfig(event);
+  const config = useRuntimeConfig();
   if (!config.githubToken || !config.public.githubUsername)
     return null;
 

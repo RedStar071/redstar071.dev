@@ -1,6 +1,6 @@
-import type { SyncContent, SyncOptions, SyncProvider } from "./index";
+import type { SyncContent, SyncOptions, SyncProvider } from "./index.ts";
 import { useLogger } from "nuxt/kit";
-import { useBuildAirspace, useBuildAirspaceWithSession } from "../../shared/airspace";
+import { useBuildAirspace, useBuildAirspaceWithSession } from "../../shared/airspace.ts";
 
 const logger = useLogger("sync:projects");
 

@@ -5,8 +5,8 @@
  */
 import process from "node:process";
 import { createAirspace, passwordSession } from "airspace";
-import { ATPROTO_DID, ATPROTO_HANDLE } from "../../shared/atproto";
-import { collections } from "../../shared/collections";
+import { ATPROTO_DID, ATPROTO_HANDLE } from "../../shared/atproto.ts";
+import { collections } from "../../shared/collections.ts";
 
 let readOnly: ReturnType<typeof createReadOnlyAirspace> | undefined;
 
